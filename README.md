@@ -2,7 +2,7 @@
 
 ContactEase is a web application for managing your contacts easily and efficiently.
 
-## Visit the page here: []()
+## Visit the page here: [Page]()
 
 ## Key Features
 
