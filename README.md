@@ -2,7 +2,7 @@
 
 ContactEase is a web application for managing your contacts easily and efficiently.
 
-## Visit the page here: [Page]()
+## Visit the page here: [Page](https://contactease-nickgv.netlify.app/)
 
 ## Key Features
 
