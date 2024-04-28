@@ -13,12 +13,12 @@ export const ContactList = ({ toggleAddContactForm }) => {
       {!searchResultsFound
         ? (
         <div className="flex flex-col items-center gap-4">
-          <h1 className="text-center text-2xl mt-4">
+          <h1 className="text-center text-sm md:text-2xl mt-4">
             there is no contact with:
             <span className="font-bold"> {searchTerm}</span>
           </h1>
           <button
-            className="underline text-link text-xl "
+            className="underline text-link text-sm md:text-xl "
             onClick={() => setSearchTerm('')}
           >
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
@@ -62,7 +62,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
             )
           : (
         <div className="flex flex-col items-center gap-5">
-          <h1 className="text-center text-xl mx-auto mt-10">
+          <h1 className="text-center text-sm md:text-xl mx-auto mt-10">
             There is nothing here yet, try to add a new contact
           </h1>
           <button
