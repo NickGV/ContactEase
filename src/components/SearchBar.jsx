@@ -1,17 +1,17 @@
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useState } from "react";
-import { ContactsContext } from "../context/ContactsContext";
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useContext, useState } from 'react'
+import { ContactsContext } from '../context/ContactsContext'
 
 export const SearchBar = () => {
-  const { searchTerm, setSearchTerm } = useContext(ContactsContext);
+  const { searchTerm, setSearchTerm } = useContext(ContactsContext)
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+    setSearchTerm(e.target.value)
+  }
 
   return (
-    <div className="w-full px-4 md:w-50 lg:w-80">
+    <div className="w-full md:px-4 md:w-50 lg:w-80">
       <div className="relative">
         <input
           type="text"
@@ -28,5 +28,5 @@ export const SearchBar = () => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,16 +1,17 @@
-import { useContext } from "react";
-import { ContactItem } from "./ContactItem";
-import { ContactsContext } from "../context/ContactsContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from 'react'
+import { ContactItem } from './ContactItem'
+import { ContactsContext } from '../context/ContactsContext'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
 export const ContactList = ({ toggleAddContactForm }) => {
   const { contacts, searchResultsFound, searchTerm, setSearchTerm } =
-    useContext(ContactsContext);
+    useContext(ContactsContext)
 
   return (
-    <div className="shadow-md shadow-slate-400 ml-4 mb-4 mt-4  rounded-md h-full bg-black-bg border-2 border-orange-400 overflow-y-auto">
-      {!searchResultsFound ? (
+    <div className="md:shadow-md md:shadow-slate-400 md:ml-4 md:mb-4 md:mt-4 rounded-md md:bg-black-bg md:border-2 md:border-orange-400 overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0 flex-1 ">
+      {!searchResultsFound
+        ? (
         <div className="flex flex-col items-center gap-4">
           <h1 className="text-center text-2xl mt-4">
             there is no contact with:
@@ -18,20 +19,34 @@ export const ContactList = ({ toggleAddContactForm }) => {
           </h1>
           <button
             className="underline text-link text-xl "
-            onClick={() => setSearchTerm("")}
+            onClick={() => setSearchTerm('')}
           >
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
             Return
           </button>
         </div>
-      ) : contacts && contacts.length > 0 ? (
-        <div>
-          <h2 className="mb-3 text-xl text-white-headline font-bold p-2">
+          )
+        : contacts && contacts.length > 0
+          ? (
+        <div className="flex md:flex-col ">
+          <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
-          <ul>
+          <div className="flex flex-col items-center justify-center">
+            <button
+              type="button"
+              className="flex items-center text-center justify-center md:hidden mt-3 text-white-btn-text bg-gray-500 rounded-full h-16 w-16"
+              onClick={toggleAddContactForm}
+            >
+              <FontAwesomeIcon icon={faUserPlus} className="text-3xl" />
+            </button>
+            <span className="text-sm text-center text-slate-700">
+              Add contact
+            </span>
+          </div>
+          <ul className="w-full flex md:flex-col">
             {contacts.map((contact) => (
-              <li className=" border-b" key={contact.id}>
+              <li className="md:border-b" key={contact.id}>
                 <ContactItem
                   id={contact.id}
                   name={contact.name}
@@ -44,7 +59,8 @@ export const ContactList = ({ toggleAddContactForm }) => {
             ))}
           </ul>
         </div>
-      ) : (
+            )
+          : (
         <div className="flex flex-col items-center gap-5">
           <h1 className="text-center text-xl mx-auto mt-10">
             There is nothing here yet, try to add a new contact
@@ -58,7 +74,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
             Add New Contact
           </button>
         </div>
-      )}
+            )}
     </div>
-  );
-};
+  )
+}

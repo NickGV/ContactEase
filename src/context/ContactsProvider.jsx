@@ -1,41 +1,41 @@
-import { useEffect, useState } from "react";
-import { ContactsContext } from "./ContactsContext";
-import { v4 as uuidv4 } from "uuid";
-import { toast } from "sonner";
+import { useEffect, useState } from 'react'
+import { ContactsContext } from './ContactsContext'
+import { v4 as uuidv4 } from 'uuid'
+import { toast } from 'sonner'
 
 export const ContactsProvider = ({ children }) => {
   const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem("contacts")) || []
-  );
-  const [editingContact, setEditingContact] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchResultsFound, setSearchResultsFound] = useState(true);
+    JSON.parse(localStorage.getItem('contacts')) || []
+  )
+  const [editingContact, setEditingContact] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [searchResultsFound, setSearchResultsFound] = useState(true)
 
   const saveContactsToLocalStorage = (contacts) => {
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-  };
+    localStorage.setItem('contacts', JSON.stringify(contacts))
+  }
 
   useEffect(() => {
-    saveContactsToLocalStorage(contacts);
-  }, [contacts]);
+    saveContactsToLocalStorage(contacts)
+  }, [contacts])
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setSearchResults([]);
-      setSearchResultsFound(true); 
+    if (searchTerm.trim() === '') {
+      setSearchResults([])
+      setSearchResultsFound(true)
     } else {
       const filteredContacts = contacts.filter((contact) =>
         Object.values(contact).some(
           (value) =>
-            typeof value === "string" &&
+            typeof value === 'string' &&
             value.toLowerCase().includes(searchTerm.toLowerCase())
         )
-      );
-      setSearchResults(filteredContacts);
-      setSearchResultsFound(filteredContacts.length > 0); 
+      )
+      setSearchResults(filteredContacts)
+      setSearchResultsFound(filteredContacts.length > 0)
     }
-  }, [searchTerm, contacts]);
+  }, [searchTerm, contacts])
 
   const addNewContact = (data) => {
     const newContact = {
@@ -45,32 +45,32 @@ export const ContactsProvider = ({ children }) => {
       phoneNumber: data.phoneNumber,
       notes: data.notes,
       isFavorite: false,
-      isSelected: false,
-    };
-    setContacts([...contacts, newContact]);
-  };
+      isSelected: false
+    }
+    setContacts([...contacts, newContact])
+  }
 
   const deleteContact = (id) => {
-    toast.error("Deleted");
-    setContacts(contacts.filter((contact) => contact.id !== id));
-  };
+    toast.error('Deleted')
+    setContacts(contacts.filter((contact) => contact.id !== id))
+  }
 
   const handleSelectedContact = (id) => {
-    setEditingContact(null);
+    setEditingContact(null)
 
     setContacts((prevContacts) =>
       prevContacts.map((contact) => {
         if (contact.id === id) {
           return {
             ...contact,
-            isSelected: !contact.isSelected,
-          };
+            isSelected: !contact.isSelected
+          }
         } else {
-          return { ...contact, isSelected: false };
+          return { ...contact, isSelected: false }
         }
       })
-    );
-  };
+    )
+  }
 
   const addToFavorites = (id) => {
     setContacts((prevContacts) =>
@@ -78,38 +78,38 @@ export const ContactsProvider = ({ children }) => {
         if (contact.id === id) {
           const updatedContact = {
             ...contact,
-            isFavorite: !contact.isFavorite,
-          };
+            isFavorite: !contact.isFavorite
+          }
           toast.success(
             updatedContact.isFavorite
-              ? "Added to favorites"
-              : "Removed from favorites"
-          );
-          return updatedContact;
+              ? 'Added to favorites'
+              : 'Removed from favorites'
+          )
+          return updatedContact
         }
-        return contact;
+        return contact
       })
-    );
-  };
+    )
+  }
 
   const handleEditContact = (id) => {
-    const contactToId = contacts.find((contact) => contact.id === id);
-    setEditingContact(contactToId);
-  };
+    const contactToId = contacts.find((contact) => contact.id === id)
+    setEditingContact(contactToId)
+  }
 
   const editContact = (editedContact) => {
     setContacts((prevContacts) =>
       prevContacts.map((contact) =>
         contact.id === editedContact.id ? editedContact : contact
       )
-    );
-    setEditingContact(null);
-  };
+    )
+    setEditingContact(null)
+  }
 
   return (
     <ContactsContext.Provider
       value={{
-        contacts: searchTerm.trim() === "" ? contacts : searchResults,
+        contacts: searchTerm.trim() === '' ? contacts : searchResults,
         setContacts,
         addNewContact,
         handleSelectedContact,
@@ -126,5 +126,5 @@ export const ContactsProvider = ({ children }) => {
     >
       {children}
     </ContactsContext.Provider>
-  );
-};
+  )
+}

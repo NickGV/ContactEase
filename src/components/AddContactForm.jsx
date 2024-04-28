@@ -1,49 +1,49 @@
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useFormValidation from "../hooks/useForm";
-import { useContext } from "react";
-import { ContactsContext } from "../context/ContactsContext";
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import useFormValidation from '../hooks/useForm'
+import { useContext } from 'react'
+import { ContactsContext } from '../context/ContactsContext'
 
 export const AddContactForm = ({ showForm, onClose }) => {
-  const { addNewContact } = useContext(ContactsContext);
+  const { addNewContact } = useContext(ContactsContext)
 
   const INITIAL_STATE = {
-    name: "",
-    email: "",
-    phoneNumber: "",
-    notes: "",
-  };
+    name: '',
+    email: '',
+    phoneNumber: '',
+    notes: ''
+  }
 
   const validateForm = (values) => {
-    let errors = {};
+    const errors = {}
 
     if (!values.name) {
-      errors.name = "The name is required";
+      errors.name = 'The name is required'
     }
 
     if (!values.email) {
-      errors.email = "Email is required";
+      errors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = "The email is not valid";
+      errors.email = 'The email is not valid'
     }
 
     if (!values.phoneNumber) {
-      errors.phoneNumber = "Phone number is required";
+      errors.phoneNumber = 'Phone number is required'
     }
 
-    return errors;
-  };
+    return errors
+  }
 
   const handleSubmitForm = (formData) => {
-    addNewContact(formData);
-    onClose();
-  };
+    addNewContact(formData)
+    onClose()
+  }
 
   const { formData, errors, handleChange, handleSubmit } = useFormValidation(
     INITIAL_STATE,
     validateForm,
     handleSubmitForm
-  );
+  )
 
   return (
     <>
@@ -62,7 +62,7 @@ export const AddContactForm = ({ showForm, onClose }) => {
                   value={formData.name}
                   onChange={handleChange}
                   className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
-                    errors.name ? "border-red-500" : ""
+                    errors.name ? 'border-red-500' : ''
                   }`}
                   placeholder=" "
                   required
@@ -86,7 +86,7 @@ export const AddContactForm = ({ showForm, onClose }) => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
-                    errors.name ? "border-red-500" : ""
+                    errors.name ? 'border-red-500' : ''
                   }`}
                   placeholder=" "
                   required
@@ -109,7 +109,7 @@ export const AddContactForm = ({ showForm, onClose }) => {
                   value={formData.phoneNumber}
                   onChange={handleChange}
                   className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer${
-                    errors.name ? "border-red-500" : ""
+                    errors.name ? 'border-red-500' : ''
                   }`}
                   placeholder=" "
                   required
@@ -160,5 +160,5 @@ export const AddContactForm = ({ showForm, onClose }) => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
