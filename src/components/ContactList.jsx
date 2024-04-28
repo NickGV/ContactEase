@@ -32,7 +32,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
-          <div className="flex flex-col items-center justify-center">
+          <div className="md:hidden flex flex-col items-center justify-center">
             <button
               type="button"
               className="flex items-center text-center justify-center md:hidden mt-3 text-white-btn-text bg-gray-500 rounded-full h-16 w-16"
@@ -62,7 +62,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
             )
           : (
         <div className="flex flex-col items-center gap-5">
-          <h1 className="text-center text-sm md:text-xl mx-auto mt-10">
+          <h1 className="text-center text-sm md:text-lg lg:text-xl mx-auto mt-10">
             There is nothing here yet, try to add a new contact
           </h1>
           <button

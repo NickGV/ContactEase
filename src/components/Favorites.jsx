@@ -16,7 +16,7 @@ export const Favorites = ({ handleTabChange, toggleAddContactForm }) => {
           <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
             Favorites
           </h2>
-          <div className="flex flex-col items-center">
+          <div className="md:hidden flex flex-col items-center">
             <button
               type="button"
               className="flex items-center text-center justify-center md:hidden mt-3 text-white-btn-text bg-gray-500 rounded-full h-16 w-16"
@@ -47,11 +47,11 @@ export const Favorites = ({ handleTabChange, toggleAddContactForm }) => {
           )
         : (
         <div className="flex flex-col items-center gap-5">
-          <h1 className="text-center text-xl mx-auto mt-10">
+          <h1 className="text-center text-sm md:text-lg lg:text-xl mx-auto mt-10">
             You have no one favorite contact, try to make one your favorite
           </h1>
           <button
-            className="underline text-link hover:scale-110 "
+            className="underline text-sm md:text-lg text-link hover:scale-110 "
             onClick={() => handleTabChange('contacts')}
           >
             Go back to contact list

@@ -50,13 +50,13 @@ export const ContactItem = ({
             <p className="font-bold text-slate-700  text-sm md:text-lg">
               {name}
             </p>
-            <p className="hidden md:block md:text-lg">{phoneNumber}</p>
-            <a href={email} className="hidden md:block text-link underline">
+            <p className="hidden md:block md:text-md lg:text-lg">{phoneNumber}</p>
+            <a href={email} className="hidden md:block text-sm xl:text-lg text-link underline">
               {email}
             </a>
           </div>
         </div>
-        <div className="flex items-end gap-3 relative">
+        <div className="sm:hidden xl:flex  flex items-end gap-3 relative">
           <button
             className={`hidden text-2xl md:flex items-center relative hover:scale-150 transition-all ${
               isFavorite ? 'text-yellow-500' : 'text-gray-500'
