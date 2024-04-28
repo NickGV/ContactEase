@@ -57,7 +57,6 @@ export const ContactsProvider = ({ children }) => {
 
   const handleSelectedContact = (id) => {
     setEditingContact(null)
-
     setContacts((prevContacts) =>
       prevContacts.map((contact) => {
         if (contact.id === id) {
@@ -106,6 +105,11 @@ export const ContactsProvider = ({ children }) => {
     setEditingContact(null)
   }
 
+  const resetSelectedContact = () => {
+    setContacts((prevContacts) =>
+      prevContacts.map((contact) => ({ ...contact, isSelected: false }))
+    )
+  }
   return (
     <ContactsContext.Provider
       value={{
@@ -121,7 +125,8 @@ export const ContactsProvider = ({ children }) => {
         editContact,
         searchTerm,
         setSearchTerm,
-        searchResultsFound
+        searchResultsFound,
+        resetSelectedContact
       }}
     >
       {children}

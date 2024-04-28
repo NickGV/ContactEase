@@ -1,21 +1,22 @@
-import { Header } from "./components/Header";
-import { Toaster } from "sonner";
-import { AddContactForm } from "./components/AddContactForm";
-import { useState } from "react";
-import { ContactsProvider } from "./context/ContactsProvider";
-import { MainSection } from "./components/MainSection";
+import { Header } from './components/Header'
+import { Toaster } from 'sonner'
+import { AddContactForm } from './components/AddContactForm'
+import { useState } from 'react'
+import { ContactsProvider } from './context/ContactsProvider'
+import { MainSection } from './components/MainSection'
+import { ContactsContext } from './context/ContactsContext'
 
-function App() {
-  const [showForm, setShowForm] = useState(false);
-  const [activeTab, setActiveTab] = useState("contacts");
+function App () {
+  const [showForm, setShowForm] = useState(false)
+  const [activeTab, setActiveTab] = useState('contacts')
 
   const toggleAddContactForm = () => {
-    setShowForm(!showForm);
-  };
+    setShowForm(!showForm)
+  }
 
   const handleTabChange = (tab) => {
-    setActiveTab(tab);
-  };
+    setActiveTab(tab)
+  }
 
   return (
     <>
@@ -33,19 +34,19 @@ function App() {
             <ul className="flex gap-4 text-xl">
               <li
                 className={`transition-all hover:text-orange-400 cursor-pointer ${
-                  activeTab === "contacts" ? "text-orange-400" : ""
+                  activeTab === 'contacts' ? 'text-orange-400' : ''
                 }`}
               >
-                <button onClick={() => handleTabChange("contacts")}>
+                <button onClick={() => handleTabChange('contacts')}>
                   Contact list
                 </button>
               </li>
               <li
                 className={`transition-all hover:text-orange-400 cursor-pointer ${
-                  activeTab === "favorites" ? "text-orange-400" : ""
+                  activeTab === 'favorites' ? 'text-orange-400' : ''
                 }`}
               >
-                <button onClick={() => handleTabChange("favorites")}>
+                <button onClick={() => handleTabChange('favorites')}>
                   Favorites
                 </button>
               </li>
@@ -56,7 +57,7 @@ function App() {
         <AddContactForm showForm={showForm} onClose={toggleAddContactForm} />
       </ContactsProvider>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

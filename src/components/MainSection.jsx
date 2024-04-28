@@ -6,7 +6,12 @@ import { EditContactForm } from './EditContactForm'
 import { Favorites } from './Favorites'
 
 export const MainSection = ({ tab, toggleAddContactForm, handleTabChange }) => {
-  const { editingContact } = useContext(ContactsContext)
+  const { editingContact, resetSelectedContact } = useContext(ContactsContext)
+
+  const handleTabChangeWithReset = (tab) => {
+    resetSelectedContact()
+    handleTabChange(tab)
+  }
 
   return (
     <main className="flex flex-col md:flex-row h-4/6 md:gap-2 md:h-5/6 xl:h-87">
@@ -16,7 +21,7 @@ export const MainSection = ({ tab, toggleAddContactForm, handleTabChange }) => {
         )}
         {tab === 'favorites' && (
           <Favorites
-            handleTabChange={handleTabChange}
+            handleTabChange={handleTabChangeWithReset} // Usamos la versión con el reset
             toggleAddContactForm={toggleAddContactForm}
           />
         )}

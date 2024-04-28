@@ -42,7 +42,7 @@ export const ContactDetails = () => {
                 {contactSelected.name}
               </p>
               <p className="md:text-xl">{contactSelected.phoneNumber}</p>
-              <a href={contactSelected.email} className="text-link underline  md:text-xl">
+              <a href={`mailto:${contactSelected.email}`} className="text-link underline  md:text-xl">
                 {contactSelected.email}
               </a>
             </div>

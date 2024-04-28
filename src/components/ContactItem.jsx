@@ -51,7 +51,7 @@ export const ContactItem = ({
               {name}
             </p>
             <p className="hidden md:block md:text-md lg:text-lg">{phoneNumber}</p>
-            <a href={email} className="hidden md:block text-sm xl:text-lg text-link underline">
+            <a href={`mailto:${email}`} className="hidden md:block text-sm xl:text-lg text-link underline">
               {email}
             </a>
           </div>
