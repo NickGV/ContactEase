@@ -9,7 +9,7 @@ export const MainSection = ({ tab, toggleAddContactForm, handleTabChange }) => {
   const { editingContact } = useContext(ContactsContext)
 
   return (
-    <main className="flex flex-col md:flex-row h-3/5 md:gap-2 md:h-4/6 lg:h-87">
+    <main className="flex flex-col md:flex-row h-4/6 md:gap-2 md:h-5/6 xl:h-87">
       <div className="w-full h-36 md:h-95 lg:h-full  md:w-30 md:flex ">
         {tab === 'contacts' && (
           <ContactList toggleAddContactForm={toggleAddContactForm} />
