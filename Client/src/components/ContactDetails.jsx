@@ -38,13 +38,15 @@ export const ContactDetails = () => {
               <FontAwesomeIcon icon={faUser} />
             </div>
             <div>
-              <p className="font-bold text-xl md:text-2xl">
-                {contactSelected.name}
-              </p>
-              <p className="md:text-xl">{contactSelected.phoneNumber}</p>
-              <a href={`mailto:${contactSelected.email}`} className="text-link underline  md:text-xl">
-                {contactSelected.email}
-              </a>
+              <div>
+                <p className="font-bold text-xl md:text-2xl">
+                  {contactSelected.name}
+                </p>
+                <p className="md:text-xl">{contactSelected.phoneNumber}</p>
+                <a href={`mailto:${contactSelected.email}`} className="text-link underline  md:text-xl">
+                  {contactSelected.email}
+                </a>
+              </div>
             </div>
           </div>
           <h2 className=" text-white-headline font-bold md:text-2xl mb-3">

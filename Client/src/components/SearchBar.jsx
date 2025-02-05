@@ -1,6 +1,6 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { ContactsContext } from '../context/ContactsContext'
 
 export const SearchBar = () => {
