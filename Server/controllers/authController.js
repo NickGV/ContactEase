@@ -18,7 +18,7 @@ exports.register = async (req, res) => {
     user = new User({
       username,
       email,
-      password,
+      password: await bcrypt.hash(password, 10),
     });
     await user.save();
 
@@ -74,4 +74,3 @@ exports.deleteUser = async (req, res) => {
 exports.logout = async (req, res) => {
   res.json({ message: "Logout successful" });
 };
-
