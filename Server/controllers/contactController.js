@@ -31,7 +31,7 @@ exports.addContact = async (req, res) => {
   }
 };
 
-const updateContact = async (req, res) => {
+exports.updateContact = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, phone } = req.body;
