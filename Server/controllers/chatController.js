@@ -3,26 +3,32 @@ const Chat = require("../models/Chat");
 const User = require("../models/User");
 
 exports.createChat = async (req, res) => {
-  const { userIds } = req.body;
+  const { contactId } = req.body;
+  const userId = req.user.id;
   try {
-    let chat = await Chat.findOne({ participants: { $all: userIds } });
+    let chat = await Chat.findOne({
+      participants: { $all: [userId, contactId] },
+    });
 
-    if (!chat) {
-      chat = new Chat({
-        participants: userIds,
-      });
+    if (chat) {
+      const messages = await Message.find({ chatId: chat._id });
+      return res.json({ chat, messages });
     }
+
+    chat = new Chat({
+      participants: [userId, contactId],
+    });
 
     await chat.save();
 
     await User.updateMany(
-      { _id: { $in: userIds } },
+      { _id: { $in: [userId, contactId] } },
       { $push: { chats: chat._id } }
     );
 
     res.status(201).json(chat);
   } catch (err) {
-    res.status(500).json({ error: "Error en el servidor" });
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -32,12 +38,12 @@ exports.getMessages = async (req, res) => {
     const chat = await Chat.findById(chatId).populate("messages");
 
     if (!chat) {
-      return res.status(404).json({ msg: "Chat no encontrado" });
+      return res.status(404).json({ msg: "Chat not found" });
     }
 
     res.json(chat.messages);
   } catch (err) {
-    res.status(500).json({ error: "Error en el servidor" });
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -63,6 +69,6 @@ exports.sendMessage = async (req, res) => {
 
     res.status(201).json(message);
   } catch (err) {
-    res.status(500).json({ error: "Error en el servidor" });
+    res.status(500).json({ error: "Server error" });
   }
 };
