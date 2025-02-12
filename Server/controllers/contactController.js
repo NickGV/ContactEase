@@ -1,6 +1,7 @@
 const Contact = require("../models/Contact");
 
 exports.getContacts = async (req, res) => {
+  console.log(req.user);
   try {
     const contacts = await Contact.find({ user: req.user.id }).sort({
       date: -1,
@@ -34,7 +35,7 @@ exports.addContact = async (req, res) => {
 exports.updateContact = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, phone } = req.body;
+    const { name, email, phone, notes } = req.body;
 
     const contact = await Contact.findById(id);
 
@@ -49,10 +50,12 @@ exports.updateContact = async (req, res) => {
     contact.name = name || contact.name;
     contact.email = email || contact.email;
     contact.phone = phone || contact.phone;
+    contact.notes = notes || contact.notes;
 
     await contact.save();
     res.json(contact);
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
@@ -73,4 +76,3 @@ exports.deleteContact = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
-
