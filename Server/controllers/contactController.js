@@ -1,10 +1,9 @@
 const Contact = require("../models/Contact");
 
 exports.getContacts = async (req, res) => {
-  console.log(req.user);
   try {
-    const contacts = await Contact.find({ user: req.user.id }).sort({
-      date: -1,
+    const contacts = await Contact.find({ userId: req.user.id }).sort({
+      createdAt: -1,
     });
     res.json(contacts);
   } catch (error) {
@@ -40,11 +39,11 @@ exports.updateContact = async (req, res) => {
     const contact = await Contact.findById(id);
 
     if (!contact) {
-      return res.status(404).json({ msg: "Contacto no encontrado" });
+      return res.status(404).json({ msg: "Contacto not found" });
     }
 
     if (contact.userId.toString() !== req.user.id) {
-      return res.status(401).json({ msg: "No autorizado" });
+      return res.status(401).json({ msg: "Not authorized" });
     }
 
     contact.name = name || contact.name;
@@ -56,21 +55,26 @@ exports.updateContact = async (req, res) => {
     res.json(contact);
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({ error: "Error en el servidor" });
+    res.status(500).json({ error: "Server error" });
   }
 };
 
 exports.deleteContact = async (req, res) => {
   try {
-    let contact = await Contact.findById(req.params.id);
-    if (!contact) return res.status(404).json({ message: "Contact not found" });
+    const { id } = req.params;
 
-    if (contact.user.toString() !== req.user.id) {
-      return res.status(401).json({ message: "Not authorized" });
+    const contact = await Contact.findById(id);
+
+    if (!contact) {
+      return res.status(404).json({ msg: "Contact not found" });
     }
 
-    await Contact.findByIdAndRemove(req.params.id);
-    res.json({ message: "Contact removed" });
+    if (contact.userId.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Not authorized" });
+    }
+
+    await Contact.findByIdAndDelete(id);
+    res.json({ msg: "Contact deleted" });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server error");
