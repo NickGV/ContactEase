@@ -2,7 +2,7 @@ const Message = require("../models/Message");
 const Chat = require("../models/Chat");
 const User = require("../models/User");
 
-exports.createChat = async (req, res) => {
+exports.getOrCreateChat = async (req, res) => {
   const { contactId } = req.body;
   const userId = req.user.id;
   try {
@@ -11,7 +11,9 @@ exports.createChat = async (req, res) => {
     });
 
     if (chat) {
-      const messages = await Message.find({ chatId: chat._id });
+      const messages = await Message.find({ chatId: chat._id }).sort({
+        timestamp: 1,
+      });
       return res.json({ chat, messages });
     }
 
@@ -35,7 +37,10 @@ exports.createChat = async (req, res) => {
 exports.getMessages = async (req, res) => {
   const { chatId } = req.params;
   try {
-    const chat = await Chat.findById(chatId).populate("messages");
+    const chat = await Chat.findById(chatId).populate({
+      path: "messages",
+      options: { sort: { timestamp: 1 } },
+    });
 
     if (!chat) {
       return res.status(404).json({ msg: "Chat not found" });
@@ -56,6 +61,10 @@ exports.sendMessage = async (req, res) => {
       return res.status(404).json({ error: "Chat no encontrado" });
     }
 
+    if (!chat.participants.includes(req.user.id)) {
+      return res.status(403).json({ msg: 'No autorizado' });
+    }
+
     const message = new Message({
       chatId,
       senderId: req.user.id,
@@ -66,6 +75,9 @@ exports.sendMessage = async (req, res) => {
 
     chat.messages.push(message);
     await chat.save();
+
+    const io = req.app.get("io");
+    io.to(chatId).emit("sendMessage", message);
 
     res.status(201).json(message);
   } catch (err) {

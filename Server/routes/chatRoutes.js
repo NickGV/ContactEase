@@ -4,7 +4,7 @@ const chatController = require('../controllers/chatController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 
-router.post('/', authMiddleware, chatController.createChat);
+router.post('/', authMiddleware, chatController.getOrCreateChat);
 router.get('/:chatId/messages', authMiddleware, chatController.getMessages);
 router.post('/send', authMiddleware, chatController.sendMessage);
 
