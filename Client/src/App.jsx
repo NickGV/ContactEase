@@ -8,6 +8,7 @@ import { NavBar } from './components/NavBar'
 import { Route, Routes } from 'react-router-dom'
 import { LoginPage } from './pages/LoginPage'
 import { Layout } from './components/Layout'
+import { RegisterPage } from './pages/RegisterPage'
 
 function App () {
   const [showForm, setShowForm] = useState(false)
@@ -28,7 +29,7 @@ function App () {
         <Toaster richColors closeButton />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           {isAuthenticated
             ? (
             <Route element={<Layout toggleAddContactForm={toggleAddContactForm} activeTab={activeTab} handleTabChange={handleTabChange} />}>

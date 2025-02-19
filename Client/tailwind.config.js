@@ -24,6 +24,9 @@ export default {
         'orange-btn': '#ff8906',
         'white-btn-text': '#fffffe',
         link: '#e53170'
+      },
+      boxShadow: {
+        'illustration': '0 0 20px rgba(0, 0, 0, 0.5)'
       }
     }
   },
