@@ -3,8 +3,10 @@ import { Toaster } from 'sonner'
 import { AddContactForm } from './components/AddContactForm'
 import { useState } from 'react'
 import { ContactsProvider } from './context/ContactsProvider'
-import { MainSection } from './components/MainSection'
-import { ContactsContext } from './context/ContactsContext'
+import { ContactPage } from './pages/ContactsPage'
+import { NavBar } from './components/NavBar'
+import { Route, Routes } from 'react-router-dom'
+import { LoginPage } from './pages/LoginPage'
 
 function App () {
   const [showForm, setShowForm] = useState(false)
@@ -23,38 +25,19 @@ function App () {
       <ContactsProvider>
         <Toaster richColors closeButton />
         <Header toggleAddContactForm={toggleAddContactForm} />
-        <MainSection
-          tab={activeTab}
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<LoginPage />} />
+          <Route path='/contacts' element={<ContactPage tab={activeTab}
           toggleAddContactForm={toggleAddContactForm}
-          handleTabChange={handleTabChange}
-        />
+          handleTabChange={handleTabChange} showForm={showForm}/>
+          }/>
+          <Route path='/chat'/>
 
-        <footer className="shadow-sm shadow-slate-400 p-3 bg-black-bg md:h-14 absolute bottom-0 w-full">
-          <nav>
-            <ul className="flex gap-4 text-xl">
-              <li
-                className={`transition-all hover:text-orange-400 cursor-pointer ${
-                  activeTab === 'contacts' ? 'text-orange-400' : ''
-                }`}
-              >
-                <button onClick={() => handleTabChange('contacts')}>
-                  Contact list
-                </button>
-              </li>
-              <li
-                className={`transition-all hover:text-orange-400 cursor-pointer ${
-                  activeTab === 'favorites' ? 'text-orange-400' : ''
-                }`}
-              >
-                <button onClick={() => handleTabChange('favorites')}>
-                  Favorites
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </footer>
+        </Routes>
+        <NavBar activeTab={activeTab} handleTabChange={handleTabChange} />
 
-        <AddContactForm showForm={showForm} onClose={toggleAddContactForm} />
       </ContactsProvider>
     </>
   )
