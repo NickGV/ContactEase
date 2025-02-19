@@ -7,10 +7,12 @@ import { ContactPage } from './pages/ContactsPage'
 import { NavBar } from './components/NavBar'
 import { Route, Routes } from 'react-router-dom'
 import { LoginPage } from './pages/LoginPage'
+import { Layout } from './components/Layout'
 
 function App () {
   const [showForm, setShowForm] = useState(false)
   const [activeTab, setActiveTab] = useState('contacts')
+  const [isAuthenticated, setIsAuthenticated] = useState(true)
 
   const toggleAddContactForm = () => {
     setShowForm(!showForm)
@@ -24,20 +26,25 @@ function App () {
     <>
       <ContactsProvider>
         <Toaster richColors closeButton />
-        <Header toggleAddContactForm={toggleAddContactForm} />
         <Routes>
-          <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<LoginPage />} />
-          <Route path='/contacts' element={<ContactPage tab={activeTab}
-          toggleAddContactForm={toggleAddContactForm}
-          handleTabChange={handleTabChange} showForm={showForm}/>
-          }/>
-          <Route path='/chat'/>
-
+          {isAuthenticated
+            ? (
+            <Route element={<Layout toggleAddContactForm={toggleAddContactForm} activeTab={activeTab} handleTabChange={handleTabChange} />}>
+              <Route path="/" element={<ContactPage tab={activeTab}
+                toggleAddContactForm={toggleAddContactForm}
+                handleTabChange={handleTabChange} showForm={showForm}/>} />
+              <Route path='/contacts' element={<ContactPage tab={activeTab}
+                toggleAddContactForm={toggleAddContactForm}
+                handleTabChange={handleTabChange} showForm={showForm}/>} />
+              <Route path='/chat' element={<div>Chat Page</div>} />
+            </Route>
+              )
+            : (
+            <Route path="*" element={<LoginPage />} />
+              )}
         </Routes>
-        <NavBar activeTab={activeTab} handleTabChange={handleTabChange} />
-
       </ContactsProvider>
     </>
   )
