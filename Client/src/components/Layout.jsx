@@ -1,11 +1,12 @@
 import { Header } from './Header'
 import { NavBar } from './NavBar'
+import { Outlet } from 'react-router-dom'
 
-export const Layout = ({ children, toggleAddContactForm, activeTab, handleTabChange }) => {
+export const Layout = ({ toggleAddContactForm, activeTab, handleTabChange }) => {
   return (
     <>
       <Header toggleAddContactForm={toggleAddContactForm} />
-      {children}
+      <Outlet />
       <NavBar activeTab={activeTab} handleTabChange={handleTabChange} />
     </>
   )

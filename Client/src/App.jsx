@@ -1,10 +1,8 @@
-import { Header } from './components/Header'
 import { Toaster } from 'sonner'
-import { AddContactForm } from './components/AddContactForm'
 import { useState } from 'react'
 import { ContactsProvider } from './context/ContactsProvider'
 import { ContactPage } from './pages/ContactsPage'
-import { NavBar } from './components/NavBar'
+import { ChatPage } from './pages/ChatPage'
 import { Route, Routes } from 'react-router-dom'
 import { LoginPage } from './pages/LoginPage'
 import { Layout } from './components/Layout'
@@ -32,15 +30,11 @@ function App () {
           <Route path="/register" element={<RegisterPage />} />
           {isAuthenticated
             ? (
-            <Route element={<Layout toggleAddContactForm={toggleAddContactForm} activeTab={activeTab} handleTabChange={handleTabChange} />}>
-              <Route path="/" element={<ContactPage tab={activeTab}
-                toggleAddContactForm={toggleAddContactForm}
-                handleTabChange={handleTabChange} showForm={showForm}/>} />
-              <Route path='/contacts' element={<ContactPage tab={activeTab}
-                toggleAddContactForm={toggleAddContactForm}
-                handleTabChange={handleTabChange} showForm={showForm}/>} />
-              <Route path='/chat' element={<div>Chat Page</div>} />
-            </Route>
+              <Route element={<Layout/>} toggleAddContactForm={toggleAddContactForm} activeTab={activeTab} handleTabChange={handleTabChange}>
+                <Route path="/" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
+                <Route path="/contacts" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
+                <Route path="/chat" element={<ChatPage />} />
+              </Route>
               )
             : (
             <Route path="*" element={<LoginPage />} />
