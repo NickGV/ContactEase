@@ -4,12 +4,12 @@ import { ContactsContext } from '../context/ContactsContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
-export const ContactList = ({ toggleAddContactForm }) => {
+export const ContactList = ({ toggleAddContactForm, selectedContact }) => {
   const { contacts, searchResultsFound, searchTerm, setSearchTerm } =
     useContext(ContactsContext)
 
   return (
-    <div className="md:shadow-md md:shadow-slate-400 md:ml-4 md:mb-4 md:mt-4 rounded-md md:bg-black-bg md:border-2 md:border-orange-400 overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0 flex-1 ">
+    <div className='m-w-full w-11/12 md:m-4 overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0'>
       {!searchResultsFound
         ? (
         <div className="flex flex-col items-center gap-4">
@@ -44,7 +44,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
               Add contact
             </span>
           </div>
-          <ul className="w-full flex md:flex-col">
+          <ul className={`w-full flex md:grid ${selectedContact ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
             {contacts.map((contact) => (
               <li className="md:border-b" key={contact.id}>
                 <ContactItem
