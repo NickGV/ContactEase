@@ -44,7 +44,7 @@ export const ContactList = ({ toggleAddContactForm, selectedContact }) => {
               Add contact
             </span>
           </div>
-          <ul className={`w-full flex md:grid ${selectedContact ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
+          <ul className={`m-w-full w-11/12 flex md:grid ${selectedContact ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
             {contacts.map((contact) => (
               <li className="md:border-b" key={contact.id}>
                 <ContactItem

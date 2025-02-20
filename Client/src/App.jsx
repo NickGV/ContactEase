@@ -10,15 +10,10 @@ import { RegisterPage } from './pages/RegisterPage'
 
 function App () {
   const [showForm, setShowForm] = useState(false)
-  const [activeTab, setActiveTab] = useState('contacts')
   const [isAuthenticated, setIsAuthenticated] = useState(true)
 
   const toggleAddContactForm = () => {
     setShowForm(!showForm)
-  }
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab)
   }
 
   return (
@@ -30,9 +25,9 @@ function App () {
           <Route path="/register" element={<RegisterPage />} />
           {isAuthenticated
             ? (
-            <Route element={<Layout toggleAddContactForm={toggleAddContactForm} activeTab={activeTab} handleTabChange={handleTabChange} />}>
-              <Route path="/" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
-              <Route path="/contacts" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
+            <Route element={<Layout toggleAddContactForm={toggleAddContactForm} />}>
+              <Route path="/" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
+              <Route path="/contacts" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
               <Route path="/chat" element={<ChatPage />} />
             </Route>
               )

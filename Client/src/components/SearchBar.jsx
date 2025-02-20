@@ -11,7 +11,7 @@ export const SearchBar = () => {
   }
 
   return (
-    <div className="w-full md:px-4 md:w-50 lg:w-80">
+    <div className="w-full md:px-4">
       <div className="relative">
         <input
           type="text"
