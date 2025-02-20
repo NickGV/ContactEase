@@ -30,11 +30,11 @@ function App () {
           <Route path="/register" element={<RegisterPage />} />
           {isAuthenticated
             ? (
-              <Route element={<Layout/>} toggleAddContactForm={toggleAddContactForm} activeTab={activeTab} handleTabChange={handleTabChange}>
-                <Route path="/" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
-                <Route path="/contacts" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
-                <Route path="/chat" element={<ChatPage />} />
-              </Route>
+            <Route element={<Layout toggleAddContactForm={toggleAddContactForm} activeTab={activeTab} handleTabChange={handleTabChange} />}>
+              <Route path="/" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
+              <Route path="/contacts" element={<ContactPage tab={activeTab} toggleAddContactForm={toggleAddContactForm} handleTabChange={handleTabChange} showForm={showForm} />} />
+              <Route path="/chat" element={<ChatPage />} />
+            </Route>
               )
             : (
             <Route path="*" element={<LoginPage />} />
