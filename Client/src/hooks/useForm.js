@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 
 const useFormValidation = (initialState, validate, onSubmit) => {
   const [formData, setFormData] = useState(initialState)
@@ -18,7 +18,11 @@ const useFormValidation = (initialState, validate, onSubmit) => {
     }
   }
 
-  return { formData, errors, handleChange, handleSubmit }
+  const setFormDataCallback = useCallback((newFormData) => {
+    setFormData(newFormData)
+  }, [])
+
+  return { formData, errors, handleChange, handleSubmit, setFormData: setFormDataCallback }
 }
 
 export default useFormValidation

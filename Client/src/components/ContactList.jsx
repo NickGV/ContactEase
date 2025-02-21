@@ -4,8 +4,8 @@ import { ContactsContext } from '../context/ContactsContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
-export const ContactList = ({ toggleAddContactForm, selectedContact }) => {
-  const { contacts, searchResultsFound, searchTerm, setSearchTerm } = useContext(ContactsContext)
+export const ContactList = ({ toggleAddContactForm }) => {
+  const { contacts, searchResultsFound, searchTerm, setSearchTerm, selectedContact } = useContext(ContactsContext)
   const [filter, setFilter] = useState('all')
 
   const filteredContacts = contacts.filter(contact => {
@@ -96,7 +96,7 @@ export const ContactList = ({ toggleAddContactForm, selectedContact }) => {
                   email={contact.email}
                   phoneNumber={contact.phoneNumber}
                   isFavorite={contact.isFavorite}
-                  isSelected={contact.isSelected}
+                  notes={contact.notes}
                 />
               </li>
             ))}
