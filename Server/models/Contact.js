@@ -20,6 +20,10 @@ const ContactSchema = new mongoose.Schema({
   notes: {
     type: String,
   },
+  isFavorite: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: Date.now,
