@@ -1,41 +1,39 @@
-import { useContext, useState } from "react";
-import { ContactsContext } from "../context/ContactsContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "sonner";
-import useFormValidation from "../hooks/useForm";
+import { useContext, useEffect, useState } from 'react'
+import { ContactsContext } from '../context/ContactsContext'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { toast } from 'sonner'
+import useFormValidation from '../hooks/useForm'
 
 export const EditContactForm = () => {
-  const { editingContact, editContact } = useContext(ContactsContext);
-
-  const contactSelected = editingContact;
+  const { editingContact, editContact } = useContext(ContactsContext)
 
   const INITIAL_STATE = {
-    name: editingContact?.name || "",
-    email: editingContact?.email || "",
-    phoneNumber: editingContact?.phoneNumber || "",
-    notes: editingContact?.notes || "",
-  };
+    name: editingContact?.name || '',
+    email: editingContact?.email || '',
+    phoneNumber: editingContact?.phoneNumber || '',
+    notes: editingContact?.notes || ''
+  }
 
   const validateForm = (values) => {
-    let errors = {};
+    const errors = {}
 
     if (!values.name) {
-      errors.name = "The name is required";
+      errors.name = 'The name is required'
     }
 
     if (!values.email) {
-      errors.email = "Email is required";
+      errors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = "The email is not valid";
+      errors.email = 'The email is not valid'
     }
 
     if (!values.phoneNumber) {
-      errors.phoneNumber = "Phone number is required";
+      errors.phoneNumber = 'Phone number is required'
     }
 
-    return errors;
-  };
+    return errors
+  }
 
   const handleEdit = (formData) => {
     const editedContact = {
@@ -43,23 +41,34 @@ export const EditContactForm = () => {
       name: formData.name,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
-      notes: formData.notes,
-    };
+      notes: formData.notes
+    }
 
-    editContact(editedContact);
-  };
+    editContact(editedContact)
+  }
 
-  const { formData, errors, handleChange, handleSubmit } = useFormValidation(
+  const { formData, errors, handleChange, handleSubmit, setFormData } = useFormValidation(
     INITIAL_STATE,
     validateForm,
     handleEdit
-  );
+  )
+
+  useEffect(() => {
+    setFormData({
+      name: editingContact?.name || '',
+      email: editingContact?.email || '',
+      phoneNumber: editingContact?.phoneNumber || '',
+      notes: editingContact?.notes || ''
+    })
+  }, [editingContact, setFormData])
 
   return (
     <div className="w-auto h-4/6 md:h-full mx-2 md:mr-4 md:mb-4 md:mt-4 p-3 shadow-md shadow-slate-400 rounded-md flex flex-col bg-black-bg border-2 border-orange-400 flex-1">
-      {!contactSelected ? (
-        <div className="text-center text-2xl mt-5">xd</div>
-      ) : (
+      {!editingContact
+        ? (
+        <div className="text-center text-2xl mt-5">No contact selected</div>
+          )
+        : (
         <form onSubmit={handleSubmit}>
           <div className="flex gap-3 items-center mb-4">
             <div className="w-25 text-5xl md:text-7xl">
@@ -72,7 +81,7 @@ export const EditContactForm = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className={`font-bold  md:text-2xl mb-1 bg-transparent border-b border-gray-500  ${
-                  errors.name && "border border-red-500"
+                  errors.name && 'border border-red-500'
                 } outline-none focus:border-blue-500`}
               />
               {errors.name && (
@@ -84,7 +93,7 @@ export const EditContactForm = () => {
                 value={formData.phoneNumber}
                 onChange={handleChange}
                 className={`md:text-xl bg-transparent border-b  border-gray-500  ${
-                  errors.phoneNumber && "border border-red-500"
+                  errors.phoneNumber && 'border border-red-500'
                 } outline-none focus:border-blue-500`}
               />
               {errors.phoneNumber && (
@@ -96,7 +105,7 @@ export const EditContactForm = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className={`text-link underline md:text-xl bg-transparent border-b border-gray-500  ${
-                  errors.email && "border border-red-500"
+                  errors.email && 'border border-red-500'
                 } outline-none focus:border-blue-500`}
               />
               {errors.email && (
@@ -126,7 +135,7 @@ export const EditContactForm = () => {
             </div>
           </div>
         </form>
-      )}
+          )}
     </div>
-  );
-};
+  )
+}

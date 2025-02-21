@@ -1,15 +1,58 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { ContactItem } from './ContactItem'
 import { ContactsContext } from '../context/ContactsContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
 export const ContactList = ({ toggleAddContactForm }) => {
-  const { contacts, searchResultsFound, searchTerm, setSearchTerm } =
-    useContext(ContactsContext)
+  const { contacts, searchResultsFound, searchTerm, setSearchTerm, selectedContact } = useContext(ContactsContext)
+  const [filter, setFilter] = useState('all')
+
+  const filteredContacts = contacts.filter(contact => {
+    if (filter === 'favorites') {
+      return contact.isFavorite
+    } else if (filter === 'recent') {
+      const oneWeekAgo = new Date()
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+      return new Date(contact.date) >= oneWeekAgo
+    }
+    return true
+  })
 
   return (
-    <div className="md:shadow-md md:shadow-slate-400 md:ml-4 md:mb-4 md:mt-4 rounded-md md:bg-black-bg md:border-2 md:border-orange-400 overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0 flex-1 ">
+    <div className='m-w-full w-11/12 md:m-4 overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0'>
+      <div className="flex justify-center gap-4 mb-4">
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="filter"
+            value="all"
+            checked={filter === 'all'}
+            onChange={() => setFilter('all')}
+          />
+          All
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="filter"
+            value="favorites"
+            checked={filter === 'favorites'}
+            onChange={() => setFilter('favorites')}
+          />
+          Favorites
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="radio"
+            name="filter"
+            value="recent"
+            checked={filter === 'recent'}
+            onChange={() => setFilter('recent')}
+          />
+          Recently Added
+        </label>
+      </div>
       {!searchResultsFound
         ? (
         <div className="flex flex-col items-center gap-4">
@@ -26,7 +69,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           </button>
         </div>
           )
-        : contacts && contacts.length > 0
+        : filteredContacts && filteredContacts.length > 0
           ? (
         <div className="flex md:flex-col ">
           <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
@@ -44,8 +87,8 @@ export const ContactList = ({ toggleAddContactForm }) => {
               Add contact
             </span>
           </div>
-          <ul className="w-full flex md:flex-col">
-            {contacts.map((contact) => (
+          <ul className={`m-w-full flex md:grid ${selectedContact ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
+            {filteredContacts.map((contact) => (
               <li className="md:border-b" key={contact.id}>
                 <ContactItem
                   id={contact.id}
@@ -53,7 +96,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
                   email={contact.email}
                   phoneNumber={contact.phoneNumber}
                   isFavorite={contact.isFavorite}
-                  isSelected={contact.isSelected}
+                  notes={contact.notes}
                 />
               </li>
             ))}

@@ -7,6 +7,7 @@ export const ContactsProvider = ({ children }) => {
   const [contacts, setContacts] = useState(
     JSON.parse(localStorage.getItem('contacts')) || []
   )
+  const [selectedContact, setSelectedContact] = useState(null)
   const [editingContact, setEditingContact] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -44,8 +45,7 @@ export const ContactsProvider = ({ children }) => {
       email: data.email,
       phoneNumber: data.phoneNumber,
       notes: data.notes,
-      isFavorite: false,
-      isSelected: false
+      isFavorite: false
     }
     setContacts([...contacts, newContact])
   }
@@ -55,20 +55,13 @@ export const ContactsProvider = ({ children }) => {
     setContacts(contacts.filter((contact) => contact.id !== id))
   }
 
-  const handleSelectedContact = (id) => {
+  const handleSelectedContact = (contact) => {
     setEditingContact(null)
-    setContacts((prevContacts) =>
-      prevContacts.map((contact) => {
-        if (contact.id === id) {
-          return {
-            ...contact,
-            isSelected: !contact.isSelected
-          }
-        } else {
-          return { ...contact, isSelected: false }
-        }
-      })
-    )
+    if (selectedContact?.id === contact.id) {
+      setSelectedContact(null)
+    } else {
+      setSelectedContact(contact)
+    }
   }
 
   const addToFavorites = (id) => {
@@ -92,8 +85,8 @@ export const ContactsProvider = ({ children }) => {
   }
 
   const handleEditContact = (id) => {
-    const contactToId = contacts.find((contact) => contact.id === id)
-    setEditingContact(contactToId)
+    const contactToEdit = contacts.find((contact) => contact.id === id)
+    setEditingContact(contactToEdit)
   }
 
   const editContact = (editedContact) => {
@@ -106,10 +99,9 @@ export const ContactsProvider = ({ children }) => {
   }
 
   const resetSelectedContact = () => {
-    setContacts((prevContacts) =>
-      prevContacts.map((contact) => ({ ...contact, isSelected: false }))
-    )
+    setSelectedContact(null)
   }
+
   return (
     <ContactsContext.Provider
       value={{
@@ -126,7 +118,8 @@ export const ContactsProvider = ({ children }) => {
         searchTerm,
         setSearchTerm,
         searchResultsFound,
-        resetSelectedContact
+        resetSelectedContact,
+        selectedContact
       }}
     >
       {children}
