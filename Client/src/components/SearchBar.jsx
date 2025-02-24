@@ -18,7 +18,7 @@ export const SearchBar = () => {
           placeholder="Search contacts"
           onChange={handleSearchChange}
           value={searchTerm}
-          className="w-full bg-transparent rounded-md border border-stroke dark:border-dark-3 py-2.5 px-4 text-dark-6 outline-none transition focus:border-white focus:ring focus:ring-orange-400"
+          className="w-full bg-transparent rounded-md border border-stroke dark:border-dark-3 py-2.5 px-4 text-dark-6 outline-none transition focus:border-white ring-white ring-1 focus:ring-orange-400"
         />
         <button
           type="button"

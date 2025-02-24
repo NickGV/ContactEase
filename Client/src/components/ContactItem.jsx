@@ -89,7 +89,7 @@ export const ContactItem = ({
             <FontAwesomeIcon icon={regularStar} className="text-yellow-500" />
               )}
           {hoveredButton === 'favorite' && (
-            <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-1 py-0.5 rounded">
+            <span className="absolute top-[-2rem] left-1/2 transform -translate-x-1/2 bg-black text-white text-[8px] w-24 px-1 rounded">
               Add to favorites
             </span>
           )}
@@ -103,7 +103,7 @@ export const ContactItem = ({
         >
           <FontAwesomeIcon icon={faPenToSquare} />
           {hoveredButton === 'edit' && (
-            <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-1 py-0.5 rounded">
+            <span className="absolute top-[-2rem] left-1/2 transform -translate-x-1/2 bg-black text-white text-[8px] w-8 px-1 rounded">
               Edit
             </span>
           )}
