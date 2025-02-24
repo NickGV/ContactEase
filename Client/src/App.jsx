@@ -25,15 +25,16 @@ function App () {
           <Route path="/register" element={<RegisterPage />} />
           {isAuthenticated
             ? (
-            <Route element={<Layout toggleAddContactForm={toggleAddContactForm} />}>
-              <Route path="/" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
-              <Route path="/contacts" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
-              <Route path="/chat" element={<ChatPage />} />
-            </Route>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
+                  <Route path="/contacts" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
+                  <Route path="/chat" element={<ChatPage />} />
+                </Route>
               )
             : (
-            <Route path="*" element={<LoginPage />} />
-              )}
+                <Route path="*" element={<LoginPage />} />
+              )
+          }
         </Routes>
       </ContactsProvider>
     </>

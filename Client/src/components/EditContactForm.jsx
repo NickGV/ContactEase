@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { ContactsContext } from '../context/ContactsContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { toast } from 'sonner'
 import useFormValidation from '../hooks/useForm'
 
 export const EditContactForm = () => {

@@ -1,7 +1,6 @@
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { SearchBar } from './SearchBar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
 
 export const Header = ({ toggleAddContactForm }) => {
   return (

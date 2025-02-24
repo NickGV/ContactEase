@@ -7,7 +7,7 @@ import { AddContactForm } from '../components/AddContactForm'
 import { Header } from '../components/Header'
 
 export const ContactPage = ({ toggleAddContactForm, showForm }) => {
-  const { editingContact, contacts, selectedContact } = useContext(ContactsContext)
+  const { editingContact, selectedContact } = useContext(ContactsContext)
 
   return (
     <>

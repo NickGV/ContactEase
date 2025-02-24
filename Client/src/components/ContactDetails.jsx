@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react'
-import { toast } from 'sonner'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faStar as solidStar,
