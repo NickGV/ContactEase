@@ -89,9 +89,9 @@ export const ContactList = ({ toggleAddContactForm }) => {
           </div>
           <ul className={`m-w-full flex md:grid ${selectedContact ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
             {filteredContacts.map((contact) => (
-              <li className="md:border-b" key={contact.id}>
+              <li className="md:border-b" key={contact._id}>
                 <ContactItem
-                  id={contact.id}
+                  _id={contact._id}
                   name={contact.name}
                   email={contact.email}
                   phoneNumber={contact.phoneNumber}

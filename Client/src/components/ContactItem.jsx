@@ -10,7 +10,7 @@ import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons'
 import { ContactsContext } from '../context/ContactsContext'
 
 export const ContactItem = ({
-  id,
+  _id,
   name,
   email,
   phoneNumber,
@@ -20,27 +20,40 @@ export const ContactItem = ({
   const {
     handleSelectedContact,
     addToFavorites,
-    deleteContact,
+    deleteContactById,
     handleEditContact,
     selectedContact
   } = useContext(ContactsContext)
 
   const [hoveredButton, setHoveredButton] = useState(null)
 
+  const handleDeleteContact = (e) => {
+    e.stopPropagation()
+    deleteContactById(_id)
+  }
+
   const handleFavoritesClick = (e) => {
     e.stopPropagation()
-    addToFavorites(id)
+    addToFavorites(_id)
   }
 
   const editingContact = (e) => {
     e.stopPropagation()
-    handleEditContact(id)
+    const contact = {
+      _id,
+      name,
+      email,
+      phoneNumber,
+      notes,
+      isFavorite
+    }
+    handleEditContact(contact)
   }
 
   const handleclick = (e) => {
     e.stopPropagation()
     const contact = {
-      id,
+      _id,
       name,
       email,
       phoneNumber,
@@ -53,7 +66,7 @@ export const ContactItem = ({
   return (
     <div
       className={`relative flex gap-3 md:justify-between p-4 md:bg-black-bg hover:cursor-pointer w-20 md:w-full rounded-lg ${
-        selectedContact?.id === id ? 'md:bg-slate-700' : ''
+        selectedContact?._id === _id ? 'md:bg-slate-700' : ''
       }`}
       onClick={handleclick}
     >
@@ -73,7 +86,7 @@ export const ContactItem = ({
       </div>
       <div className="sm:hidden xl:flex flex items-end gap-3 relative">
         <button
-          className={`hidden text-2xl md:flex items-center relative hover:scale-150 transition-all ${
+          className={`hidden text-2xl sm:flex md:flex items-center relative hover:scale-150 transition-all ${
             isFavorite ? 'text-yellow-500' : 'text-gray-500'
           }`}
           title="Agregar a favoritos (Agregar a lista de favoritos)"
@@ -111,7 +124,7 @@ export const ContactItem = ({
       </div>
       <button
         className="hidden md:block absolute text-xl top-0 right-0 mr-2 text-gray-300 hover:text-red-500 hover:scale-110 transition-all"
-        onClick={() => deleteContact(id)}
+        onClick={handleDeleteContact}
       >
         <FontAwesomeIcon icon={faXmark} />
       </button>

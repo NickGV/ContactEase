@@ -16,25 +16,25 @@ export const getContacts = async () => {
     const response = await axios.get(API_URL, getAuthHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error
   }
 }
 
-export const addContact = async ({ name, email, phone, notes }) => {
+export const addContact = async ({ name, email, phoneNumber, notes }) => {
   try {
-    const response = await axios.post(`${API_URL}/add`, { name, email, phone, notes }, getAuthHeaders())
+    const response = await axios.post(`${API_URL}/add`, { name, email, phoneNumber, notes }, getAuthHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error
   }
 }
 
-export const updateContact = async ({ id, name, email, phone, notes, isFavorite }) => {
+export const updateContact = async ({ id, name, email, phoneNumber, notes, isFavorite }) => {
   try {
-    const response = await axios.put(`${API_URL}/update/${id}`, { name, email, phone, notes, isFavorite }, getAuthHeaders())
+    const response = await axios.put(`${API_URL}/update/${id}`, { name, email, phoneNumber, notes, isFavorite }, getAuthHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error
   }
 }
 
@@ -43,6 +43,15 @@ export const deleteContact = async (id) => {
     const response = await axios.delete(`${API_URL}/delete/${id}`, getAuthHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error
+  }
+}
+
+export const getContactById = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`, getAuthHeaders())
+    return response.data
+  } catch (error) {
+    return error
   }
 }

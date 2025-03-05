@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { ContactsContext } from './ContactsContext'
+import { AuthContext } from './AuthContext'
 import { toast } from 'sonner'
-import { addContact, getContacts, updateContact, deleteContact } from '../services/contactService'
+import { addContact, getContacts, updateContact, deleteContact, getContactById } from '../services/contactService'
 
 export const ContactsProvider = ({ children }) => {
+  const { user } = useContext(AuthContext)
   const [contacts, setContacts] = useState([])
   const [selectedContact, setSelectedContact] = useState(null)
   const [editingContact, setEditingContact] = useState(null)
@@ -17,11 +19,10 @@ export const ContactsProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
+    if (user) {
       getUserContacts()
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (searchTerm.trim() === '') {
@@ -44,13 +45,17 @@ export const ContactsProvider = ({ children }) => {
     const newContact = {
       name: data.name,
       email: data.email,
-      phone: data.phone,
+      phoneNumber: data.phoneNumber,
       notes: data.notes,
       isFavorite: false
     }
-    await addContact(newContact)
-    toast.success('Contact added')
-    getUserContacts()
+    try {
+      await addContact(newContact)
+      toast.success('Contact added')
+      getUserContacts()
+    } catch (error) {
+      return toast.error(error)
+    }
   }
 
   const deleteContactById = async (id) => {
@@ -61,7 +66,7 @@ export const ContactsProvider = ({ children }) => {
 
   const handleSelectedContact = (contact) => {
     setEditingContact(null)
-    if (selectedContact?.id === contact.id) {
+    if (selectedContact?._id === contact._id) {
       setSelectedContact(null)
     } else {
       setSelectedContact(contact)
@@ -69,33 +74,42 @@ export const ContactsProvider = ({ children }) => {
   }
 
   const addToFavorites = async (id) => {
-    const contact = contacts.find((contact) => contact.id === id)
-
+    const contact = await getContactById(id)
+    const isFavorite = !contact.isFavorite
+    const data = {
+      id,
+      isFavorite
+    }
     try {
-      await updateContact({ id, isFavorite: !contact.isFavorite })
+      await updateContact(data)
       getUserContacts()
     } catch (error) {
-      return toast.error(error.response.data)
+      return toast.error(error)
     }
 
     toast.success(
       contact.isFavorite
-        ? 'Added to favorites'
-        : 'Removed from favorites'
+        ? 'Removed from favorites'
+        : 'Added to favorites'
     )
   }
 
-  const handleEditContact = (id) => {
-    const contactToEdit = contacts.find((contact) => contact.id === id)
-    setEditingContact(contactToEdit)
+  const handleEditContact = (contact) => {
+    if (editingContact?._id === contact._id) {
+      setEditingContact(null)
+    } else {
+      setSelectedContact(contact)
+      setEditingContact(contact)
+    }
   }
 
   const editContact = async (editedContact) => {
     try {
       await updateContact(editedContact)
       getUserContacts()
+      setSelectedContact(editedContact)
     } catch (error) {
-      return toast.error(error.response.data)
+      return toast.error(error)
     }
 
     toast.success('Contact updated')

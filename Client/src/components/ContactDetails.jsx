@@ -56,7 +56,7 @@ export const ContactDetails = () => {
               <button
                 className="text-gray-500 text-2xl flex items-center relative hover:scale-150 transition-all"
                 title="Editar (Editar contacto)"
-                onClick={() => handleEditContact(selectedContact.id)}
+                onClick={() => handleEditContact(selectedContact)}
                 onMouseEnter={() => setHoveredButton('edit')}
                 onMouseLeave={() => setHoveredButton(null)}
               >

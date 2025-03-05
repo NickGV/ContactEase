@@ -13,10 +13,11 @@ const useFormValidation = (initialState, validate, onSubmit) => {
     const validationErrors = validate(formData)
     setErrors(validationErrors)
     if (Object.keys(validationErrors).length === 0) {
-      console.log(formData)
-      const result = await onSubmit(formData)
-      if (result.success) {
+      try {
+        await onSubmit(formData)
         setFormData(initialState)
+      } catch (err) {
+        console.error(err)
       }
     }
   }
