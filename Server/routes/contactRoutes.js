@@ -7,5 +7,6 @@ router.get("/", authMiddleware, contactController.getContacts);
 router.post("/add", authMiddleware, contactController.addContact);
 router.put("/update/:id", authMiddleware, contactController.updateContact);
 router.delete("/delete/:id", authMiddleware, contactController.deleteContact);
+router.get("/:id", authMiddleware, contactController.getContactById);
 
 module.exports = router;
