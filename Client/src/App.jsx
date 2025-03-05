@@ -7,12 +7,11 @@ import { Route, Routes } from 'react-router-dom'
 import { LoginPage } from './pages/LoginPage'
 import { Layout } from './components/Layout'
 import { RegisterPage } from './pages/RegisterPage'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, AuthContext } from './context/AuthContext'
 
-function App () {
+function AppContent () {
   const [showForm, setShowForm] = useState(false)
-  const token = localStorage.getItem('token')
-  console.log(token)
+  const { user } = useContext(AuthContext)
 
   const toggleAddContactForm = () => {
     setShowForm(!showForm)
@@ -20,28 +19,33 @@ function App () {
 
   return (
     <>
-      <AuthProvider>
-        <ContactsProvider>
-          <Toaster richColors closeButton />
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            {token
-              ? (
-                  <Route element={<Layout />}>
-                    <Route path="/" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
-                    <Route path="/contacts" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
-                    <Route path="/chat" element={<ChatPage />} />
-                  </Route>
-                )
-              : (
-                  <Route path="*" element={<LoginPage />} />
-                )
-            }
-          </Routes>
-        </ContactsProvider>
-      </AuthProvider>
+      <ContactsProvider>
+        <Toaster richColors closeButton />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          {user
+            ? (
+            <Route element={<Layout />}>
+              <Route path="/" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
+              <Route path="/contacts" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
+              <Route path="/chat" element={<ChatPage />} />
+            </Route>
+              )
+            : (
+            <Route path="*" element={<LoginPage />} />
+              )}
+        </Routes>
+      </ContactsProvider>
     </>
+  )
+}
+
+function App () {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
 
