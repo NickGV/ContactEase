@@ -13,28 +13,27 @@ exports.getContacts = async (req, res) => {
 };
 
 exports.addContact = async (req, res) => {
-  const { name, email, phone, notes } = req.body;
-
+  const { name, email, phoneNumber, notes } = req.body;
   try {
     const newContact = new Contact({
       userId: req.user.id,
       name,
       email,
-      phone,
+      phoneNumber,
       notes,
     });
     const contact = await newContact.save();
     res.json(contact);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Server error");
+    res.status(500).send('Server error');
   }
 };
 
 exports.updateContact = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, phone, notes, isFavorite } = req.body;
+    const { name, email, phoneNumber, notes, isFavorite } = req.body;
 
     const contact = await Contact.findById(id);
 
@@ -48,7 +47,7 @@ exports.updateContact = async (req, res) => {
 
     contact.name = name || contact.name;
     contact.email = email || contact.email;
-    contact.phone = phone || contact.phone;
+    contact.phoneNumber = phoneNumber || contact.phoneNumber;
     contact.notes = notes || contact.notes;
     contact.isFavorite = isFavorite || contact.isFavorite;
 
