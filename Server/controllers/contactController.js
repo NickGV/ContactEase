@@ -34,7 +34,7 @@ exports.addContact = async (req, res) => {
 exports.updateContact = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, phone, notes } = req.body;
+    const { name, email, phone, notes, isFavorite } = req.body;
 
     const contact = await Contact.findById(id);
 
@@ -50,6 +50,7 @@ exports.updateContact = async (req, res) => {
     contact.email = email || contact.email;
     contact.phone = phone || contact.phone;
     contact.notes = notes || contact.notes;
+    contact.isFavorite = isFavorite || contact.isFavorite;
 
     await contact.save();
     res.json(contact);
