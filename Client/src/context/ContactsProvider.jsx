@@ -81,7 +81,8 @@ export const ContactsProvider = ({ children }) => {
       isFavorite
     }
     try {
-      await updateContact(data)
+      const UptdatedContact = await updateContact(data)
+      setSelectedContact(UptdatedContact)
       getUserContacts()
     } catch (error) {
       return toast.error(error)
