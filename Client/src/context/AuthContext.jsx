@@ -6,8 +6,9 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
 
-  const handleRegister = async (username, email, password) => {
-    const response = await register(username, email, password)
+  const handleRegister = async (username, email, phoneNumber, password) => {
+    const cleanedPhoneNumber = phoneNumber.replace(/\s+/g, '')
+    const response = await register(username, email, Number(cleanedPhoneNumber), password)
     if (response.token) {
       localStorage.setItem('token', response.token)
       getUserData()

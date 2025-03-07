@@ -11,9 +11,9 @@ const getAuthHeaders = () => {
   }
 }
 
-export const register = async (username, email, password) => {
+export const register = async (username, email, phoneNumber, password) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, { username, email, password })
+    const response = await axios.post(`${API_URL}/register`, { username, email, phoneNumber, password })
     console.log(response)
     return response.data
   } catch (error) {
