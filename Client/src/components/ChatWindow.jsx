@@ -3,10 +3,14 @@ import { useEffect, useState } from 'react'
 import { Message } from './Message'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import useChat from '../hooks/useChat'
 
-export const ChatWindow = ({ chatId }) => {
+export const ChatWindow = () => {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
+  const { selectedChat } = useChat()
+
+  const chatId = selectedChat?._id
 
   // useEffect(() => {
   //   socket.emit('joinChat', chatId)

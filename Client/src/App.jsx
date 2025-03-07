@@ -8,6 +8,7 @@ import { LoginPage } from './pages/LoginPage'
 import { Layout } from './components/Layout'
 import { RegisterPage } from './pages/RegisterPage'
 import { AuthProvider, AuthContext } from './context/AuthContext'
+import { ChatProvider } from './context/ChatContext'
 
 function AppContent () {
   const [showForm, setShowForm] = useState(false)
@@ -20,22 +21,24 @@ function AppContent () {
   return (
     <>
       <ContactsProvider>
-        <Toaster richColors closeButton />
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          {user
-            ? (
-            <Route element={<Layout />}>
-              <Route path="/" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
-              <Route path="/contacts" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
-              <Route path="/chat" element={<ChatPage />} />
-            </Route>
-              )
-            : (
-            <Route path="*" element={<LoginPage />} />
-              )}
-        </Routes>
+        <ChatProvider>
+          <Toaster richColors closeButton />
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            {user
+              ? (
+              <Route element={<Layout />}>
+                <Route path="/" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
+                <Route path="/contacts" element={<ContactPage toggleAddContactForm={toggleAddContactForm} showForm={showForm} />} />
+                <Route path="/chat" element={<ChatPage />} />
+              </Route>
+                )
+              : (
+              <Route path="*" element={<LoginPage />} />
+                )}
+          </Routes>
+        </ChatProvider>
       </ContactsProvider>
     </>
   )

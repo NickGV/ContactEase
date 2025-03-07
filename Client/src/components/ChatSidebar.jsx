@@ -3,12 +3,14 @@ import { ContactsContext } from '../context/ContactsContext'
 import { faArrowLeft, faUser, faUserPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useContext } from 'react'
 import { SearchBar } from './SearchBar'
+import useChat from '../hooks/useChat'
 
 export const ChatSidebar = () => {
   const {
-    contacts, searchResultsFound, searchTerm, setSearchTerm, selectedContact, handleSelectedContact,
+    contacts, searchTerm, setSearchTerm, searchResultsFound,
     deleteContact
   } = useContext(ContactsContext)
+  const { createOrGetChat, selectedChat } = useChat()
 
   const filteredContacts = contacts.filter(contact => {
     if (searchTerm.trim() === '') {
@@ -22,7 +24,7 @@ export const ChatSidebar = () => {
   })
   const handleclick = (e, contact) => {
     e.stopPropagation()
-    handleSelectedContact(contact)
+    createOrGetChat(contact._id)
   }
 
   return (
@@ -61,12 +63,12 @@ export const ChatSidebar = () => {
               Add contact
             </span>
           </div>
-          <ul className={`m-w-full flex md:grid ${selectedContact ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
+          <ul className={`m-w-full flex md:grid ${selectedChat ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
             {filteredContacts.map((contact) => (
-              <li className="md:border-b" key={contact.id}>
+              <li className="md:border-b" key={contact._id}>
                 <div
                       className={`relative flex gap-3 md:justify-between p-4 md:bg-black-bg hover:cursor-pointer w-20 md:w-full rounded-lg ${
-                        selectedContact?.id === contact.id ? 'md:bg-slate-700' : ''
+                        selectedChat?.participants.includes(contact._id) ? 'md:bg-slate-700' : ''
                       }`}
                       onClick={(e) => handleclick(e, contact)}
                     >
@@ -76,7 +78,7 @@ export const ChatSidebar = () => {
                         </div>
                         <div className="text-center md:text-left">
                           <p className="font-bold text-white text-sm md:text-lg">
-                            {name}
+                            {contact.name}
                           </p>
                           <p className="hidden md:block md:text-md lg:text-lg">{contact.phoneNumber}</p>
                           <a href={`mailto:${contact.email}`} className="hidden md:block text-sm xl:text-lg text-link underline">
