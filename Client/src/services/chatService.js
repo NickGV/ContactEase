@@ -11,12 +11,12 @@ const getChatHeaders = () => {
   }
 }
 
-export const getOrCreateChat = async (contactId) => {
+export const getOrCreateChat = async (phoneNumber) => {
   try {
-    const response = await axios.post(`${API_URL}`, { contactId }, getChatHeaders())
+    const response = await axios.post(`${API_URL}`, { phoneNumber }, getChatHeaders())
     return response.data
   } catch (error) {
-    return error
+    return error.response.data
   }
 }
 
@@ -25,7 +25,7 @@ export const getMessages = async (chatId) => {
     const response = await axios.get(`${API_URL}/${chatId}/messages`, getChatHeaders())
     return response.data
   } catch (error) {
-    return error
+    return error.response.data
   }
 }
 
@@ -34,6 +34,6 @@ export const sendMessage = async (chatId, content) => {
     const response = await axios.post(`${API_URL}/send`, { chatId, content }, getChatHeaders())
     return response.data
   } catch (error) {
-    return error
+    return error.response.data
   }
 }

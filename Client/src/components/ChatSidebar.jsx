@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ContactsContext } from '../context/ContactsContext'
 import { faArrowLeft, faUser, faUserPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { SearchBar } from './SearchBar'
 import useChat from '../hooks/useChat'
+import { InvitePopup } from './InvitePopup'
 
 export const ChatSidebar = () => {
   const {
@@ -11,6 +12,8 @@ export const ChatSidebar = () => {
     deleteContact
   } = useContext(ContactsContext)
   const { createOrGetChat, selectedChat } = useChat()
+  const [showInvitePopup, setShowInvitePopup] = useState(false)
+  const [inviteContact, setInviteContact] = useState(null)
 
   const filteredContacts = contacts.filter(contact => {
     if (searchTerm.trim() === '') {
@@ -22,9 +25,16 @@ export const ChatSidebar = () => {
         value.toLowerCase().includes(searchTerm.toLowerCase())
     )
   })
-  const handleclick = (e, contact) => {
+
+  const handleclick = async (e, contact) => {
     e.stopPropagation()
-    createOrGetChat(contact._id)
+    await createOrGetChat(contact.phoneNumber)
+    const response = await createOrGetChat(contact.phoneNumber)
+    console.log(response)
+    if (response.message && response.message === 'Contact not found') {
+      setInviteContact(contact)
+      setShowInvitePopup(true)
+    }
   }
 
   return (
@@ -88,7 +98,7 @@ export const ChatSidebar = () => {
                       </div>
                       <button
                         className="hidden md:block absolute text-xl top-0 right-0 mr-2 text-gray-300 hover:text-red-500 hover:scale-110 transition-all"
-                        onClick={() => deleteContact(id)}
+                        onClick={() => deleteContact(contact._id)}
                       >
                         <FontAwesomeIcon icon={faXmark} />
                       </button>
@@ -105,6 +115,9 @@ export const ChatSidebar = () => {
           </h1>
         </div>
             )}
+      {showInvitePopup && (
+        <InvitePopup contact={inviteContact} onClose={() => setShowInvitePopup(false)} />
+      )}
     </div>
   )
 }

@@ -12,7 +12,7 @@ export const ChatProvider = ({ children }) => {
       const response = await getMessages(chatId)
       setMessages(response)
     } catch (error) {
-      console.error(error)
+      return error
     }
   }
 
@@ -21,22 +21,24 @@ export const ChatProvider = ({ children }) => {
       await sendMessage(selectedChat._id, message)
       getChatMessages(selectedChat._id)
     } catch (error) {
-      console.error(error)
+      return error
     }
   }
 
-  const createOrGetChat = async (contactId) => {
+  const createOrGetChat = async (phoneNumber) => {
     try {
-      const response = await getOrCreateChat(contactId)
-      if (response.chat._id === selectedChat?._id) {
-        setSelectedChat(null)
-        return
+      const response = await getOrCreateChat(phoneNumber)
+      if (response.chat) {
+        if (response.chat._id === selectedChat?._id) {
+          setSelectedChat(null)
+          return
+        }
+        setSelectedChat(response.chat)
+        getChatMessages(response.chat._id)
       }
-
-      setSelectedChat(response.chat)
-      getChatMessages(response.chat._id)
+      return response
     } catch (error) {
-      console.error(error)
+      return error
     }
   }
 
