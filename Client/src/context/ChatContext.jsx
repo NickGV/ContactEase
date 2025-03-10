@@ -1,11 +1,32 @@
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { getMessages, getOrCreateChat, sendMessage } from '../services/chatService'
+import { io } from 'socket.io-client'
 
 export const ChatContext = createContext()
 
 export const ChatProvider = ({ children }) => {
   const [messages, setMessages] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
+  const [socket, setSocket] = useState(null)
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:3000', {
+      query: { token: localStorage.getItem('token') }
+    })
+    setSocket(newSocket)
+
+    return () => newSocket.close()
+  }, [])
+
+  useEffect(() => {
+    if (socket) {
+      const handleMessage = (message) => {
+        setMessages((prevMessages) => [...prevMessages, message])
+      }
+      socket.on('sendMessage', handleMessage)
+      return () => socket.off('sendMessage', handleMessage)
+    }
+  }, [socket])
 
   const getChatMessages = async (chatId) => {
     try {
@@ -17,11 +38,8 @@ export const ChatProvider = ({ children }) => {
   }
 
   const addMessage = async (message) => {
-    try {
-      await sendMessage(selectedChat._id, message)
-      getChatMessages(selectedChat._id)
-    } catch (error) {
-      return error
+    if (selectedChat) {
+      socket.emit('sendMessage', { chatId: selectedChat._id, content: message })
     }
   }
 
@@ -35,6 +53,7 @@ export const ChatProvider = ({ children }) => {
         }
         setSelectedChat(response.chat)
         getChatMessages(response.chat._id)
+        socket.emit('joinChat', { chatId: response.chat._id })
       }
       return response
     } catch (error) {

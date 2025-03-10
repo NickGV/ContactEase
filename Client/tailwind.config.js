@@ -30,5 +30,28 @@ export default {
       }
     }
   },
-  plugins: []
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.scrollbar-thin': {
+          'scrollbar-width': 'thin',
+          'scrollbar-color': '#888 transparent',
+          '::-webkit-scrollbar': {
+            width: '4px',
+          },
+          '::-webkit-scrollbar-track': {
+            background: 'transparent',
+          },
+          '::-webkit-scrollbar-thumb': {
+            backgroundColor: '#888',
+            borderRadius: '2px',
+          },
+          '::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: '#555',
+          },
+        },
+      }
+      addUtilities(newUtilities, ['responsive']);
+    },
+  ]
 }

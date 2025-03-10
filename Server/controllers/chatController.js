@@ -76,11 +76,6 @@ exports.sendMessage = async (req, res) => {
       content,
     });
 
-    await message.save();
-
-    chat.messages.push(message);
-    await chat.save();
-
     const io = req.app.get("io");
     io.to(chatId).emit("sendMessage", message);
 
