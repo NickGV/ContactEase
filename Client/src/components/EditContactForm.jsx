@@ -37,6 +37,7 @@ export const EditContactForm = () => {
   const handleEdit = (formData) => {
     const editedContact = {
       ...editingContact,
+      id: editingContact._id,
       name: formData.name,
       email: formData.email,
       phoneNumber: formData.phoneNumber,

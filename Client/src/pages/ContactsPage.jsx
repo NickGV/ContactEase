@@ -8,7 +8,6 @@ import { Header } from '../components/Header'
 
 export const ContactPage = ({ toggleAddContactForm, showForm }) => {
   const { editingContact, selectedContact } = useContext(ContactsContext)
-
   return (
     <>
      <Header toggleAddContactForm={toggleAddContactForm} />

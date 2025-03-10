@@ -4,7 +4,14 @@ const Message = require("../models/Message");
 const Chat = require("../models/Chat");
 
 const configureSocket = (server) => {
-  const io = socketIo(server);
+  const io = socketIo(server, {
+    cors: {
+      origin: "http://localhost:5173",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    }
+  });
 
   io.use((socket, next) => {
     const token = socket.handshake.query.token;
@@ -44,7 +51,7 @@ const configureSocket = (server) => {
         chat.messages.push(message._id);
         await chat.save();
 
-        io.to(chatId).emit("message", message);
+        io.to(chatId).emit("sendMessage", message);
       } catch (err) {
         console.error(err.message);
       }

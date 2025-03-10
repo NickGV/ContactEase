@@ -7,5 +7,6 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 router.delete('/delete', authMiddleware, authController.deleteUser);
+router.get('/user', authMiddleware, authController.getUser);
 
 module.exports = router;

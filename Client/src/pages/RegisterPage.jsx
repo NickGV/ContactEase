@@ -1,8 +1,55 @@
 import { useNavigate } from 'react-router-dom'
 import illustration from '../assets/illustration.png'
+import useAuth from '../hooks/useAuth'
+import useFormValidation from '../hooks/useForm'
 
 export const RegisterPage = () => {
   const navigate = useNavigate()
+  const { handleRegister } = useAuth()
+
+  const INITIAL_STATE = {
+    username: '',
+    email: '',
+    phoneNumber: '',
+    password: ''
+  }
+
+  const validateForm = (values) => {
+    const errors = {}
+
+    if (!values.username) {
+      errors.username = 'The username is required'
+    }
+
+    if (!values.email) {
+      errors.email = 'Email is required'
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = 'The email is not valid'
+    }
+
+    if (!values.phoneNumber) {
+      errors.phoneNumber = 'Phone number is required'
+    }
+
+    if (!values.password) {
+      errors.password = 'Password is required'
+    }
+
+    return errors
+  }
+
+  const handleSubmitForm = async (formData) => {
+    const response = await handleRegister(formData.username, formData.email, formData.phoneNumber, formData.password)
+    if (response.token) {
+      navigate('/contacts')
+    }
+  }
+
+  const { formData, errors, handleChange, handleSubmit } = useFormValidation(
+    INITIAL_STATE,
+    validateForm,
+    handleSubmitForm
+  )
 
   return (
     <section className="flex items-center justify-center h-screen">
@@ -10,18 +57,66 @@ export const RegisterPage = () => {
 
       <div className="w-96 text-black p-6 bg-[#d3d3d3] rounded-lg">
         <h1 className="font-bold text-7xl mb-10 text-center">Register</h1>
-        <form>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2 mb-4">
-            <label htmlFor="name" className="text-sm font-semibold">Name</label>
-            <input type="text" id="name" name="name" className="p-2 text-lg rounded-lg" placeholder="John Doe" />
+            <label htmlFor="username" className="text-sm font-semibold">Username</label>
+            <input
+              onChange={handleChange}
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              className={`p-2 text-lg rounded-lg ${errors.username ? 'border border-red-500' : ''}`}
+              placeholder="John Doe"
+            />
+            {errors.username && (
+              <p className="text-red-500 text-sm">{errors.username}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 mb-4">
             <label htmlFor="email" className="text-sm font-semibold">Email</label>
-            <input type="email" id="email" name="email" className="p-2 text-lg rounded-lg" placeholder="john@gmail.com" />
+            <input
+              onChange={handleChange}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              className={`p-2 text-lg rounded-lg ${errors.email ? 'border border-red-500' : ''}`}
+              placeholder="john@gmail.com"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 mb-4">
+            <label htmlFor="phoneNumber" className="text-sm font-semibold">Phone Number</label>
+            <input
+              onChange={handleChange}
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              className={`p-2 text-lg rounded-lg ${errors.phoneNumber ? 'border border-red-500' : ''}`}
+              placeholder="123 456 7890"
+            />
+            {errors.phoneNumber && (
+              <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 mb-4">
             <label htmlFor="password" className="text-sm font-semibold">Password</label>
-            <input type="password" id="password" name="password" className="p-2 rounded-lg text-lg" placeholder="password" />
+            <input
+              onChange={handleChange}
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              className={`p-2 rounded-lg text-lg ${errors.password ? 'border border-red-500' : ''}`}
+              placeholder="password"
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
+            )}
           </div>
           <button type="submit" className="w-full p-2 bg-[#030303] text-white font-bold rounded-xl transition-colors duration-300 hover:bg-[#505050]">Register</button>
         </form>

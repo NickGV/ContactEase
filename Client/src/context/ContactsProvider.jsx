@@ -1,25 +1,28 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { ContactsContext } from './ContactsContext'
-import { v4 as uuidv4 } from 'uuid'
+import { AuthContext } from './AuthContext'
 import { toast } from 'sonner'
+import { addContact, getContacts, updateContact, deleteContact, getContactById } from '../services/contactService'
 
 export const ContactsProvider = ({ children }) => {
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem('contacts')) || []
-  )
+  const { user } = useContext(AuthContext)
+  const [contacts, setContacts] = useState([])
   const [selectedContact, setSelectedContact] = useState(null)
   const [editingContact, setEditingContact] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [searchResultsFound, setSearchResultsFound] = useState(true)
 
-  const saveContactsToLocalStorage = (contacts) => {
-    localStorage.setItem('contacts', JSON.stringify(contacts))
+  const getUserContacts = async () => {
+    const response = await getContacts()
+    setContacts(response)
   }
 
   useEffect(() => {
-    saveContactsToLocalStorage(contacts)
-  }, [contacts])
+    if (user) {
+      getUserContacts()
+    }
+  }, [user])
 
   useEffect(() => {
     if (searchTerm.trim() === '') {
@@ -38,63 +41,79 @@ export const ContactsProvider = ({ children }) => {
     }
   }, [searchTerm, contacts])
 
-  const addNewContact = (data) => {
+  const addNewContact = async (data) => {
     const newContact = {
-      id: uuidv4(),
       name: data.name,
       email: data.email,
       phoneNumber: data.phoneNumber,
       notes: data.notes,
       isFavorite: false
     }
-    setContacts([...contacts, newContact])
+    try {
+      await addContact(newContact)
+      toast.success('Contact added')
+      getUserContacts()
+    } catch (error) {
+      return toast.error(error)
+    }
   }
 
-  const deleteContact = (id) => {
+  const deleteContactById = async (id) => {
+    await deleteContact(id)
+    getUserContacts()
     toast.error('Deleted')
-    setContacts(contacts.filter((contact) => contact.id !== id))
   }
 
   const handleSelectedContact = (contact) => {
     setEditingContact(null)
-    if (selectedContact?.id === contact.id) {
+    if (selectedContact?._id === contact._id) {
       setSelectedContact(null)
     } else {
       setSelectedContact(contact)
     }
   }
 
-  const addToFavorites = (id) => {
-    setContacts((prevContacts) =>
-      prevContacts.map((contact) => {
-        if (contact.id === id) {
-          const updatedContact = {
-            ...contact,
-            isFavorite: !contact.isFavorite
-          }
-          toast.success(
-            updatedContact.isFavorite
-              ? 'Added to favorites'
-              : 'Removed from favorites'
-          )
-          return updatedContact
-        }
-        return contact
-      })
+  const addToFavorites = async (id) => {
+    const contact = await getContactById(id)
+    const isFavorite = !contact.isFavorite
+    const data = {
+      id,
+      isFavorite
+    }
+    try {
+      const UptdatedContact = await updateContact(data)
+      setSelectedContact(UptdatedContact)
+      getUserContacts()
+    } catch (error) {
+      return toast.error(error)
+    }
+
+    toast.success(
+      contact.isFavorite
+        ? 'Removed from favorites'
+        : 'Added to favorites'
     )
   }
 
-  const handleEditContact = (id) => {
-    const contactToEdit = contacts.find((contact) => contact.id === id)
-    setEditingContact(contactToEdit)
+  const handleEditContact = (contact) => {
+    if (editingContact?._id === contact._id) {
+      setEditingContact(null)
+    } else {
+      setSelectedContact(contact)
+      setEditingContact(contact)
+    }
   }
 
-  const editContact = (editedContact) => {
-    setContacts((prevContacts) =>
-      prevContacts.map((contact) =>
-        contact.id === editedContact.id ? editedContact : contact
-      )
-    )
+  const editContact = async (editedContact) => {
+    try {
+      await updateContact(editedContact)
+      getUserContacts()
+      setSelectedContact(editedContact)
+    } catch (error) {
+      return toast.error(error)
+    }
+
+    toast.success('Contact updated')
     setEditingContact(null)
   }
 
@@ -110,7 +129,7 @@ export const ContactsProvider = ({ children }) => {
         addNewContact,
         handleSelectedContact,
         addToFavorites,
-        deleteContact,
+        deleteContactById,
         editingContact,
         setEditingContact,
         handleEditContact,

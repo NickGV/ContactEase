@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, phoneNumber, password } = req.body;
 
   try {
     let user = await User.findOne({
@@ -18,6 +18,7 @@ exports.register = async (req, res) => {
     user = new User({
       username,
       email,
+      phoneNumber,
       password: await bcrypt.hash(password, 10),
     });
     await user.save();
@@ -70,6 +71,17 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  }
+  catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server error");
+  }
+}
 
 exports.logout = async (req, res) => {
   res.json({ message: "Logout successful" });

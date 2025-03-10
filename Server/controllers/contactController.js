@@ -13,49 +13,49 @@ exports.getContacts = async (req, res) => {
 };
 
 exports.addContact = async (req, res) => {
-  const { name, email, phone, notes } = req.body;
-
+  const { name, email, phoneNumber, notes } = req.body;
   try {
     const newContact = new Contact({
       userId: req.user.id,
       name,
       email,
-      phone,
+      phoneNumber,
       notes,
     });
     const contact = await newContact.save();
     res.json(contact);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Server error");
+    res.status(500).send('Server error');
   }
 };
 
 exports.updateContact = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, phone, notes } = req.body;
+    const { name, email, phoneNumber, notes, isFavorite } = req.body;
 
     const contact = await Contact.findById(id);
 
     if (!contact) {
-      return res.status(404).json({ msg: "Contacto not found" });
+      return res.status(404).json({ msg: 'Contact not found' });
     }
 
     if (contact.userId.toString() !== req.user.id) {
-      return res.status(401).json({ msg: "Not authorized" });
+      return res.status(401).json({ msg: 'Not authorized' });
     }
 
     contact.name = name || contact.name;
     contact.email = email || contact.email;
-    contact.phone = phone || contact.phone;
+    contact.phoneNumber = phoneNumber || contact.phoneNumber;
     contact.notes = notes || contact.notes;
+    contact.isFavorite = isFavorite !== undefined ? isFavorite : contact.isFavorite;
 
     await contact.save();
     res.json(contact);
   } catch (err) {
     console.log(err.message);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -66,17 +66,37 @@ exports.deleteContact = async (req, res) => {
     const contact = await Contact.findById(id);
 
     if (!contact) {
-      return res.status(404).json({ msg: "Contact not found" });
+      return res.status(404).json({ msg: 'Contact not found' });
     }
 
     if (contact.userId.toString() !== req.user.id) {
-      return res.status(401).json({ msg: "Not authorized" });
+      return res.status(401).json({ msg: 'Not authorized' });
     }
 
     await Contact.findByIdAndDelete(id);
-    res.json({ msg: "Contact deleted" });
+    res.json({ msg: 'Contact deleted' });
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Server error");
+    res.status(500).send('Server error');
+  }
+};
+
+exports.getContactById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const contact = await Contact.findById(id);
+
+    if (!contact) {
+      return res.status(404).json({ msg: 'Contact not found' });
+    }
+
+    if (contact.userId.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+
+    res.json(contact);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server error');
   }
 };

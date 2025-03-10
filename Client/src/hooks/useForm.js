@@ -8,13 +8,17 @@ const useFormValidation = (initialState, validate, onSubmit) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const validationErrors = validate(formData)
     setErrors(validationErrors)
     if (Object.keys(validationErrors).length === 0) {
-      onSubmit(formData)
-      setFormData(initialState)
+      try {
+        await onSubmit(formData)
+        setFormData(initialState)
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
 
