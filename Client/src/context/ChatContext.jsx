@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react'
-import { getMessages, getOrCreateChat, sendMessage, getChats } from '../services/chatService'
+import { getMessages, getOrCreateChat, sendMessage, getChats, deleteChat } from '../services/chatService'
 import { io } from 'socket.io-client'
 
 export const ChatContext = createContext()
@@ -35,7 +35,7 @@ export const ChatProvider = ({ children }) => {
       setChats(response)
     }
     fetchChats()
-  }, [])
+  }, [selectedChat])
 
   const getChatMessages = async (chatId) => {
     try {
@@ -70,11 +70,26 @@ export const ChatProvider = ({ children }) => {
     }
   }
 
+  const deleteChatById = async (chatId) => {
+    try {
+      const response = await deleteChat(chatId)
+      if (response.message && response.message === 'Chat deleted') {
+        setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId))
+      }
+      setSelectedChat(null)
+      setMessages([])
+      return response
+    } catch (error) {
+      return error
+    }
+  }
+
   return (
     <ChatContext.Provider value={{
       getChatMessages,
       addMessage,
       createOrGetChat,
+      deleteChatById,
       messages,
       selectedChat,
       setSelectedChat,

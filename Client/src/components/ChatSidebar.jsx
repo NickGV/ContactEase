@@ -9,10 +9,9 @@ import { ContactChatSelector } from './ContactChatSelector'
 
 export const ChatSidebar = () => {
   const {
-    contacts, searchTerm, setSearchTerm, searchResultsFound,
-    deleteContact
+    contacts, searchTerm, setSearchTerm, searchResultsFound
   } = useContext(ContactsContext)
-  const { createOrGetChat, selectedChat, chats } = useChat()
+  const { createOrGetChat, selectedChat, chats, deleteChatById } = useChat()
   const [showInvitePopup, setShowInvitePopup] = useState(false)
   const [inviteContact, setInviteContact] = useState(null)
   const [showContactList, setShowContactList] = useState(false)
@@ -41,6 +40,17 @@ export const ChatSidebar = () => {
       setInviteContact(contact)
       setShowInvitePopup(true)
     }
+  }
+
+  const handleDeleteChat = async (e, contact) => {
+    e.stopPropagation()
+    if (!selectedChat) {
+      const response = await createOrGetChat(contact.phoneNumber)
+      const chatId = response.chat._id
+      await deleteChatById(chatId)
+      return
+    }
+    await deleteChatById(selectedChat._id)
   }
 
   const handleNewChatClick = async (contact) => {
@@ -98,7 +108,7 @@ export const ChatSidebar = () => {
                   </div>
                   <button
                     className="hidden md:block absolute text-xl top-0 right-0 mr-2 text-gray-300 hover:text-red-500 hover:scale-110 transition-all"
-                    onClick={() => deleteContact(contact._id)}
+                    onClick={(e) => handleDeleteChat(e, contact)}
                   >
                     <FontAwesomeIcon icon={faXmark} />
                   </button>
