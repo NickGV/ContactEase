@@ -5,17 +5,25 @@ import { useContext, useState } from 'react'
 import { SearchBar } from './SearchBar'
 import useChat from '../hooks/useChat'
 import { InvitePopup } from './InvitePopup'
+import { ContactChatSelector } from './ContactChatSelector'
 
 export const ChatSidebar = () => {
   const {
     contacts, searchTerm, setSearchTerm, searchResultsFound,
     deleteContact
   } = useContext(ContactsContext)
-  const { createOrGetChat, selectedChat } = useChat()
+  const { createOrGetChat, selectedChat, chats } = useChat()
   const [showInvitePopup, setShowInvitePopup] = useState(false)
   const [inviteContact, setInviteContact] = useState(null)
+  const [showContactList, setShowContactList] = useState(false)
 
-  const filteredContacts = contacts.filter(contact => {
+  const activeChats = contacts.filter(contact =>
+    chats.some(chat =>
+      chat.participants.some(participant => participant._id === contact.userId)
+    )
+  )
+
+  const filteredContacts = activeChats.filter(contact => {
     if (searchTerm.trim() === '') {
       return true
     }
@@ -26,19 +34,22 @@ export const ChatSidebar = () => {
     )
   })
 
-  const handleclick = async (e, contact) => {
+  const handleClick = async (e, contact) => {
     e.stopPropagation()
-    await createOrGetChat(contact.phoneNumber)
     const response = await createOrGetChat(contact.phoneNumber)
-    console.log(response)
     if (response.message && response.message === 'Contact not found') {
       setInviteContact(contact)
       setShowInvitePopup(true)
     }
   }
 
+  const handleNewChatClick = async (contact) => {
+    await createOrGetChat(contact.phoneNumber)
+    setShowContactList(false)
+  }
+
   return (
-    <div className='m-w-full w-11/12  overflow-x-auto md:overflow-y-auto pt-1 px-2 '>
+    <div className='relative m-w-full w-11/12 overflow-x-auto md:overflow-y-auto pt-1 px-2'>
       <SearchBar />
       {!searchResultsFound
         ? (
@@ -48,7 +59,7 @@ export const ChatSidebar = () => {
             <span className="font-bold"> {searchTerm}</span>
           </h1>
           <button
-            className="underline text-link text-sm md:text-xl "
+            className="underline text-link text-sm md:text-xl"
             onClick={() => setSearchTerm('')}
           >
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
@@ -58,51 +69,40 @@ export const ChatSidebar = () => {
           )
         : filteredContacts && filteredContacts.length > 0
           ? (
-        <div className="flex md:flex-col ">
+        <div className="flex md:flex-col">
           <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
-          <div className="md:hidden flex flex-col items-center justify-center">
-            <button
-              type="button"
-              className="flex items-center text-center justify-center md:hidden mt-3 text-white-btn-text bg-gray-500 rounded-full h-16 w-16"
-            >
-              <FontAwesomeIcon icon={faUserPlus} className="text-3xl" />
-            </button>
-            <span className="text-sm text-center text-slate-700">
-              Add contact
-            </span>
-          </div>
           <ul className={`m-w-full flex md:grid ${selectedChat ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
             {filteredContacts.map((contact) => (
               <li className="md:border-b" key={contact._id}>
                 <div
-                      className={`relative flex gap-3 md:justify-between p-4 md:bg-black-bg hover:cursor-pointer w-20 md:w-full rounded-lg ${
-                        selectedChat?.participants.includes(contact._id) ? 'md:bg-slate-700' : ''
-                      }`}
-                      onClick={(e) => handleclick(e, contact)}
-                    >
-                      <div className="flex flex-col md:flex-row md:gap-3 items-center w-full">
-                        <div className="w-15 flex justify-center items-center text-3xl md:text-5xl text-white-btn-text bg-black-bg md:bg-transparent border rounded-full h-16 w-16 md:h-14 md:w-14 p-4">
-                          <FontAwesomeIcon icon={faUser} className="w-6" />
-                        </div>
-                        <div className="text-center md:text-left">
-                          <p className="font-bold text-white text-sm md:text-lg">
-                            {contact.name}
-                          </p>
-                          <p className="hidden md:block md:text-md lg:text-lg">{contact.phoneNumber}</p>
-                          <a href={`mailto:${contact.email}`} className="hidden md:block text-sm xl:text-lg text-link underline">
-                            {contact.email}
-                          </a>
-                        </div>
-                      </div>
-                      <button
-                        className="hidden md:block absolute text-xl top-0 right-0 mr-2 text-gray-300 hover:text-red-500 hover:scale-110 transition-all"
-                        onClick={() => deleteContact(contact._id)}
-                      >
-                        <FontAwesomeIcon icon={faXmark} />
-                      </button>
+                  className={`relative flex gap-3 md:justify-between p-4 md:bg-black-bg hover:cursor-pointer hover:opacity-90 hover:scale-105 transition-all w-20 md:w-full rounded-lg ${
+                    selectedChat?.participants.some(participant => participant._id === contact._id) ? 'md:bg-slate-700' : ''
+                  }`}
+                  onClick={(e) => handleClick(e, contact)}
+                >
+                  <div className="flex flex-col md:flex-row md:gap-3 items-center w-full">
+                    <div className="w-15 flex justify-center items-center text-3xl md:text-5xl text-white-btn-text bg-black-bg md:bg-transparent border rounded-full h-16 w-16 md:h-14 md:w-14 p-4">
+                      <FontAwesomeIcon icon={faUser} className="w-6" />
                     </div>
+                    <div className="text-center md:text-left">
+                      <p className="font-bold text-white text-sm md:text-lg">
+                        {contact.name}
+                      </p>
+                      <p className="hidden md:block md:text-md lg:text-lg">{contact.phoneNumber}</p>
+                      <a href={`mailto:${contact.email}`} className="hidden md:block text-sm xl:text-lg text-link underline">
+                        {contact.email}
+                      </a>
+                    </div>
+                  </div>
+                  <button
+                    className="hidden md:block absolute text-xl top-0 right-0 mr-2 text-gray-300 hover:text-red-500 hover:scale-110 transition-all"
+                    onClick={() => deleteContact(contact._id)}
+                  >
+                    <FontAwesomeIcon icon={faXmark} />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
@@ -117,6 +117,24 @@ export const ChatSidebar = () => {
             )}
       {showInvitePopup && (
         <InvitePopup contact={inviteContact} onClose={() => setShowInvitePopup(false)} />
+      )}
+      <div className="absolute bottom-12 right-12 flex flex-col items-center justify-center group">
+        <span className="group opacity-0 text-white text-center text-xs md:text-lg mt-3 group-hover:opacity-100 transition-opacity bg-black-bg rounded-lg p-1">
+          Add chat
+        </span>
+        <button
+          className="group flex items-center text-center justify-center mt-3 text-white-btn-text bg-black-bg rounded-full h-16 w-16 group-hover:scale-110 transition-all"
+          onClick={() => setShowContactList(!showContactList)}
+        >
+          <FontAwesomeIcon icon={faUserPlus} className="text-3xl" />
+        </button>
+      </div>
+      {showContactList && (
+        <ContactChatSelector
+          contacts={contacts}
+          onSelectContact={handleNewChatClick}
+          onClose={() => setShowContactList(false)}
+        />
       )}
     </div>
   )

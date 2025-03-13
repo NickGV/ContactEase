@@ -37,3 +37,12 @@ export const sendMessage = async (chatId, content) => {
     return error.response.data
   }
 }
+
+export const getChats = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/chats`, getChatHeaders())
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}

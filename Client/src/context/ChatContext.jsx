@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react'
-import { getMessages, getOrCreateChat, sendMessage } from '../services/chatService'
+import { getMessages, getOrCreateChat, sendMessage, getChats } from '../services/chatService'
 import { io } from 'socket.io-client'
 
 export const ChatContext = createContext()
@@ -8,6 +8,7 @@ export const ChatProvider = ({ children }) => {
   const [messages, setMessages] = useState([])
   const [selectedChat, setSelectedChat] = useState(null)
   const [socket, setSocket] = useState(null)
+  const [chats, setChats] = useState([])
 
   useEffect(() => {
     const newSocket = io('http://localhost:3000', {
@@ -27,6 +28,14 @@ export const ChatProvider = ({ children }) => {
       return () => socket.off('sendMessage', handleMessage)
     }
   }, [socket])
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      const response = await getChats()
+      setChats(response)
+    }
+    fetchChats()
+  }, [])
 
   const getChatMessages = async (chatId) => {
     try {
@@ -68,7 +77,8 @@ export const ChatProvider = ({ children }) => {
       createOrGetChat,
       messages,
       selectedChat,
-      setSelectedChat
+      setSelectedChat,
+      chats
     }}>
       {children}
     </ChatContext.Provider>

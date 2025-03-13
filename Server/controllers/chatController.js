@@ -84,3 +84,13 @@ exports.sendMessage = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+exports.getChats = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const chats = await Chat.find({ participants: userId }).populate('participants', 'username phoneNumber email');
+    res.json(chats)
+  }catch(err){
+    res.status(500).send("Server error");
+  }
+}
