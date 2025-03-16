@@ -62,6 +62,7 @@ export const ContactsProvider = ({ children }) => {
     await deleteContact(id)
     getUserContacts()
     toast.error('Deleted')
+    setSelectedContact(null)
   }
 
   const handleSelectedContact = (contact) => {

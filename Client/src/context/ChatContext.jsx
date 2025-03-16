@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from 'react'
 import { getMessages, getOrCreateChat, sendMessage, getChats, deleteChat } from '../services/chatService'
 import { io } from 'socket.io-client'
+import { toast } from 'sonner'
 
 export const ChatContext = createContext()
 
@@ -78,6 +79,7 @@ export const ChatProvider = ({ children }) => {
       }
       setSelectedChat(null)
       setMessages([])
+      toast.error('Chat deleted')
       return response
     } catch (error) {
       return error

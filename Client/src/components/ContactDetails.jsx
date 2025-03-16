@@ -14,9 +14,9 @@ export const ContactDetails = () => {
 
   const {
     addToFavorites,
-    deleteContact,
     handleEditContact,
-    selectedContact
+    selectedContact,
+    deleteContactById
   } = useContext(ContactsContext)
 
   return (
@@ -99,7 +99,7 @@ export const ContactDetails = () => {
               </button>
               <button
                 className="py-3 px-5  text-sm font-medium text-white-btn-text focus:outline-none bg-orange-btn rounded-lg border border-gray-200 hover:bg-orange-500   transition-all hover:scale-95 "
-                onClick={() => deleteContact(selectedContact.id)}
+                onClick={() => deleteContactById(selectedContact.id)}
               >
                 <FontAwesomeIcon icon={faUserMinus} className="mr-2" />
                 Delete Contact
