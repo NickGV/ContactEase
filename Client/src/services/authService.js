@@ -55,3 +55,12 @@ export const getUser = async () => {
     return error.response.data
   }
 }
+
+export const getUserById = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/user/${id}`, getAuthHeaders())
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}
