@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from 'react'
 import { getMessages, getOrCreateChat, sendMessage, getChats, deleteChat } from '../services/chatService'
 import { io } from 'socket.io-client'
 import { toast } from 'sonner'
-import { getUser } from '../services/authService'
+import { getUserById } from '../services/authService'
 export const ChatContext = createContext()
 
 export const ChatProvider = ({ children }) => {
@@ -12,11 +12,12 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([])
   const [isConnected, setIsConnected] = useState(false)
 
+  // Inicializar socket
   useEffect(() => {
     const newSocket = io('http://localhost:3000', {
       query: { token: localStorage.getItem('token') },
       reconnection: true,
-      recconectionAttempts: 10,
+      reconnectionAttempts: 10,
       reconnectionDelay: 1000
     })
     setSocket(newSocket)
@@ -29,6 +30,7 @@ export const ChatProvider = ({ children }) => {
     }
   }, [])
 
+  // Manejar eventos del socket
   useEffect(() => {
     if (!socket) return
 
@@ -40,6 +42,10 @@ export const ChatProvider = ({ children }) => {
         console.log(`Joining ${chats.length} chats:`, chats.map(c => c._id))
         const chatIds = chats.map(chat => chat._id)
         socket.emit('joinAllChats', { chatIds })
+
+        if (selectedChat) {
+          socket.emit('viewingChat', { chatId: selectedChat._id })
+        }
       } else {
         console.log('No chats to join')
       }
@@ -59,7 +65,7 @@ export const ChatProvider = ({ children }) => {
       console.log('Notification received:', chatId, message)
 
       try {
-        const sender = await getUser(message.senderId)
+        const sender = await getUserById(message.senderId)
         toast.info(`New message from ${sender?.username || 'Someone'}`)
 
         setChats(prevChats => {
@@ -94,6 +100,7 @@ export const ChatProvider = ({ children }) => {
         toast.info('New message received!')
       }
     }
+
     const handleMessage = (message) => {
       console.log('Message received:', message)
       setMessages((prevMessages) => [...prevMessages, message])
@@ -112,7 +119,7 @@ export const ChatProvider = ({ children }) => {
       socket.off('newMessageNotification', handleNewMessageNotification)
       socket.off('sendMessage', handleMessage)
     }
-  }, [socket, chats])
+  }, [socket, chats, selectedChat])
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -134,6 +141,16 @@ export const ChatProvider = ({ children }) => {
 
     fetchChats()
   }, [])
+
+  useEffect(() => {
+    if (!socket || !isConnected) return
+
+    if (selectedChat) {
+      socket.emit('viewingChat', { chatId: selectedChat._id })
+    } else {
+      socket.emit('leftChat')
+    }
+  }, [selectedChat, socket, isConnected])
 
   const getChatMessages = async (chatId) => {
     try {
@@ -165,6 +182,7 @@ export const ChatProvider = ({ children }) => {
         setSelectedChat(response.chat)
         getChatMessages(response.chat._id)
         socket.emit('joinChat', { chatId: response.chat._id })
+        socket.emit('viewingChat', { chatId: response.chat._id })
       }
       return response
     } catch (error) {
@@ -177,9 +195,14 @@ export const ChatProvider = ({ children }) => {
       const response = await deleteChat(chatId)
       if (response.message && response.message === 'Chat deleted') {
         setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId))
+
+        if (selectedChat && selectedChat._id === chatId) {
+          setSelectedChat(null)
+          setMessages([])
+          // Informar al servidor que ya no estamos viendo este chat
+          socket.emit('leftChat')
+        }
       }
-      setSelectedChat(null)
-      setMessages([])
       toast.error('Chat deleted')
       return response
     } catch (error) {

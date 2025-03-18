@@ -13,6 +13,9 @@ const configureSocket = (server) => {
     }
   });
 
+  // Mapeo de usuarios a chats activos (para saber quién está viendo qué chat)
+  const activeViewers = new Map();
+
   io.use((socket, next) => {
     const token = socket.handshake.query.token;
 
@@ -34,6 +37,18 @@ const configureSocket = (server) => {
     
     socket.join(socket.user.id);
     console.log(`User ${socket.user.id} joined personal notification room`);
+
+    // Rastrear qué chat está viendo el usuario
+    socket.on("viewingChat", ({ chatId }) => {
+      console.log(`User ${socket.user.id} is now viewing chat ${chatId}`);
+      activeViewers.set(socket.user.id, chatId);
+    });
+
+    // Usuario dejó de ver un chat
+    socket.on("leftChat", () => {
+      console.log(`User ${socket.user.id} is no longer viewing any chat`);
+      activeViewers.delete(socket.user.id);
+    });
 
     socket.on("joinChat", async ({ chatId }) => {
       socket.join(chatId);
@@ -59,8 +74,13 @@ const configureSocket = (server) => {
         chat.participants.forEach((participant) => {
           const participantId = participant.toString();
           if (participantId !== socket.user.id) {
-            console.log(`Emitting notification to participant: ${participantId}`);
-            io.to(participantId).emit("newMessageNotification", { chatId, message });
+            const activeChat = activeViewers.get(participantId);
+            if (activeChat !== chatId) {
+              console.log(`Emitting notification to participant: ${participantId} (not viewing this chat)`);
+              io.to(participantId).emit("newMessageNotification", { chatId, message });
+            } else {
+              console.log(`Participant ${participantId} is already viewing chat ${chatId}, no notification sent`);
+            }
           }
         });
       } catch (err) {
@@ -84,6 +104,7 @@ const configureSocket = (server) => {
 
     socket.on("disconnect", () => {
       console.log(`Client disconnected: ${socket.id}`);
+      activeViewers.delete(socket.user.id);
     });
   });
 
