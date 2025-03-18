@@ -11,10 +11,12 @@ export const ChatSidebar = () => {
   const {
     contacts, searchTerm, setSearchTerm, searchResultsFound
   } = useContext(ContactsContext)
-  const { createOrGetChat, selectedChat, chats, deleteChatById } = useChat()
+  const { createOrGetChat, selectedChat, chats, deleteChatById, setChats, setSelectedChat } = useChat()
   const [showInvitePopup, setShowInvitePopup] = useState(false)
   const [inviteContact, setInviteContact] = useState(null)
-  const [showContactList, setShowContactList] = useState(false)
+  const [showContactSelector, setShowContactSelector] = useState(false)
+
+  console.log('Chats state:', chats)
 
   const activeChats = contacts.filter(contact =>
     chats.some(chat =>
@@ -33,12 +35,23 @@ export const ChatSidebar = () => {
     )
   })
 
-  const handleClick = async (e, contact) => {
+  const handleChatClick = async (e, contact) => {
     e.stopPropagation()
+    if (selectedChat) {
+      setSelectedChat(null)
+      return
+    }
+
     const response = await createOrGetChat(contact.phoneNumber)
     if (response.message && response.message === 'Contact not found') {
       setInviteContact(contact)
       setShowInvitePopup(true)
+    } else {
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat._id === response.chat._id ? { ...chat, hasNotification: false } : chat
+        )
+      )
     }
   }
 
@@ -55,7 +68,7 @@ export const ChatSidebar = () => {
 
   const handleNewChatClick = async (contact) => {
     await createOrGetChat(contact.phoneNumber)
-    setShowContactList(false)
+    setShowContactSelector(false)
   }
 
   return (
@@ -90,8 +103,11 @@ export const ChatSidebar = () => {
                   className={`relative flex gap-3 md:justify-between p-4 md:bg-black-bg hover:cursor-pointer hover:opacity-90 hover:scale-105 transition-all w-20 md:w-full rounded-lg ${
                     selectedChat?.participants.some(participant => participant._id === contact._id) ? 'md:bg-slate-700' : ''
                   }`}
-                  onClick={(e) => handleClick(e, contact)}
+                  onClick={(e) => handleChatClick(e, contact)}
                 >
+                  {chats.find(chat => chat.participants.some(p => p._id === contact.userId))?.hasNotification && (
+                    <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                  )}
                   <div className="flex flex-col md:flex-row md:gap-3 items-center w-full">
                     <div className="w-15 flex justify-center items-center text-3xl md:text-5xl text-white-btn-text bg-black-bg md:bg-transparent border rounded-full h-16 w-16 md:h-14 md:w-14 p-4">
                       <FontAwesomeIcon icon={faUser} className="w-6" />
@@ -134,16 +150,16 @@ export const ChatSidebar = () => {
         </span>
         <button
           className="group flex items-center text-center justify-center mt-3 text-white-btn-text bg-black-bg rounded-full h-16 w-16 group-hover:scale-110 transition-all"
-          onClick={() => setShowContactList(!showContactList)}
+          onClick={() => setShowContactSelector(!showContactSelector)}
         >
           <FontAwesomeIcon icon={faUserPlus} className="text-3xl" />
         </button>
       </div>
-      {showContactList && (
+      {showContactSelector && (
         <ContactChatSelector
           contacts={contacts}
           onSelectContact={handleNewChatClick}
-          onClose={() => setShowContactList(false)}
+          onClose={() => setShowContactSelector(false)}
         />
       )}
     </div>

@@ -1,14 +1,16 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../context/AuthContext'
+import useChat from '../hooks/useChat'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
 
 export const NavBar = () => {
   const { user, handleLogout, handleDeleteUser } = useContext(AuthContext)
+  const { chats } = useChat()
   const [showMenu, setShowMenu] = useState(false)
   const navigate = useNavigate()
-
+  console.log(chats)
   const toggleMenu = () => {
     setShowMenu(!showMenu)
   }
@@ -37,12 +39,15 @@ export const NavBar = () => {
         <NavLink
           to="/chat"
           className={({ isActive }) =>
-            `transition-all hover:text-orange-400 cursor-pointer text-xl ${
+            `relative transition-all hover:text-orange-400 cursor-pointer text-xl ${
               isActive ? 'text-orange-400' : 'text-white'
             }`
           }
         >
           Chat
+          {chats.some((chat) => chat.hasNotification) && (
+            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          )}
         </NavLink>
 
           <div className="relative">

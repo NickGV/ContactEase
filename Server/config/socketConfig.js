@@ -30,7 +30,10 @@ const configureSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("New client connected");
+    console.log("New client connected, ID:", socket.id);
+    
+    socket.join(socket.user.id);
+    console.log(`User ${socket.user.id} joined personal notification room`);
 
     socket.on("joinChat", async ({ chatId }) => {
       socket.join(chatId);
@@ -52,13 +55,35 @@ const configureSocket = (server) => {
         await chat.save();
 
         io.to(chatId).emit("sendMessage", message);
+
+        chat.participants.forEach((participant) => {
+          const participantId = participant.toString();
+          if (participantId !== socket.user.id) {
+            console.log(`Emitting notification to participant: ${participantId}`);
+            io.to(participantId).emit("newMessageNotification", { chatId, message });
+          }
+        });
       } catch (err) {
-        console.error(err.message);
+        console.error("Error in sendMessage:", err.message);
       }
+    });
+    
+    socket.on("joinAllChats", async ({ chatIds }) => {
+      if (!chatIds || !Array.isArray(chatIds)) {
+        console.log("Invalid chatIds received");
+        return;
+      }
+      
+      chatIds.forEach((chatId) => {
+        if (chatId) {
+          socket.join(chatId);
+          console.log(`User ${socket.user.id} joined chat ${chatId}`);
+        }
+      });
     });
 
     socket.on("disconnect", () => {
-      console.log("Client disconnected");
+      console.log(`Client disconnected: ${socket.id}`);
     });
   });
 
