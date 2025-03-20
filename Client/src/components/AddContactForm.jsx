@@ -1,11 +1,10 @@
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useFormValidation from '../hooks/useForm'
-import { useContext } from 'react'
-import { ContactsContext } from '../context/ContactsContext'
+import useContacts from '../hooks/useContacts'
 
 export const AddContactForm = ({ showForm, onClose }) => {
-  const { addNewContact } = useContext(ContactsContext)
+  const { addNewContact } = useContacts()
 
   const INITIAL_STATE = {
     name: '',

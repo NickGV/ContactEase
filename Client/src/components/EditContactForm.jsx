@@ -1,11 +1,10 @@
-import { useContext, useEffect } from 'react'
-import { ContactsContext } from '../context/ContactsContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import useFormValidation from '../hooks/useForm'
+import useContacts from '../hooks/useContacts'
 
 export const EditContactForm = () => {
-  const { editingContact, editContact } = useContext(ContactsContext)
+  const { editingContact, editContact } = useContacts
 
   const INITIAL_STATE = {
     name: editingContact?.name || '',

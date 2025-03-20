@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faPenToSquare,
@@ -7,7 +7,7 @@ import {
   faStar as solidStar
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons'
-import { ContactsContext } from '../context/ContactsContext'
+import useContacts from '../hooks/useContacts'
 
 export const ContactItem = ({
   _id,
@@ -23,7 +23,7 @@ export const ContactItem = ({
     deleteContactById,
     handleEditContact,
     selectedContact
-  } = useContext(ContactsContext)
+  } = useContacts()
 
   const [hoveredButton, setHoveredButton] = useState(null)
 
