@@ -28,7 +28,6 @@ exports.register = async (req, res) => {
     });
     res.json({ token });
   } catch (error) {
-    console.error(error.message);
     res.status(500).send("Server error");
   }
 };
@@ -57,7 +56,6 @@ exports.login = async (req, res) => {
     });
     res.json({ token });
   } catch (error) {
-    console.error(error.message);
     res.status(500).send("Server error");
   }
 };
@@ -67,7 +65,6 @@ exports.deleteUser = async (req, res) => {
     await User.findByIdAndDelete(req.user.id);
     res.json({ message: "User deleted" });
   } catch (error) {
-    console.error(error.message);
     res.status(500).send("Server error");
   }
 };
@@ -78,7 +75,6 @@ exports.getUser = async (req, res) => {
     res.json(user);
   }
   catch (error) {
-    console.error(error.message);
     res.status(500).send("Server error");
   }
 }
@@ -90,7 +86,6 @@ exports.getUserById = async (req, res) => {
     res.json(user);
   }
   catch (error) {
-    console.error(error.message);
     res.status(500).send("Server error");
   }
 }
