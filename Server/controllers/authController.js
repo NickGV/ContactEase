@@ -10,9 +10,9 @@ exports.register = async (req, res) => {
       email,
     });
     if (user) {
-      return res.status(400).json({
-        message: "User already exists",
-      });
+      const error = new Error("User already exists");
+      error.statusCode = 400;
+      return next(error);
     }
 
     user = new User({
@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
     });
     res.json({ token });
   } catch (error) {
-    res.status(500).send("Server error");
+        next(error);
   }
 };
 
@@ -40,15 +40,15 @@ exports.login = async (req, res) => {
       email,
     });
     if (!user) {
-      return res.status(400).json({
-        message: "Invalid credentials",
-      });
+      const error = new Error("Invalid credentials");
+      error.statusCode = 400;
+      return next(error);
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({
-        message: "Invalid credentials",
-      });
+      const error = new Error("Invalid credentials");
+      error.statusCode = 400;
+      return next(error);
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
     });
     res.json({ token });
   } catch (error) {
-    res.status(500).send("Server error");
+    next(error);
   }
 };
 
@@ -65,7 +65,7 @@ exports.deleteUser = async (req, res) => {
     await User.findByIdAndDelete(req.user.id);
     res.json({ message: "User deleted" });
   } catch (error) {
-    res.status(500).send("Server error");
+    next(error);
   }
 };
 
@@ -75,7 +75,7 @@ exports.getUser = async (req, res) => {
     res.json(user);
   }
   catch (error) {
-    res.status(500).send("Server error");
+    next(error);
   }
 }
 
@@ -86,7 +86,7 @@ exports.getUserById = async (req, res) => {
     res.json(user);
   }
   catch (error) {
-    res.status(500).send("Server error");
+    next(error);
   }
 }
 
