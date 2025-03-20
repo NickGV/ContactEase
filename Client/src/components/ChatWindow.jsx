@@ -19,8 +19,12 @@ export const ChatWindow = () => {
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === '') return
-    await addMessage(newMessage)
-    setNewMessage('')
+    try {
+      await addMessage(newMessage)
+      setNewMessage('')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleKeyDown = (e) => {

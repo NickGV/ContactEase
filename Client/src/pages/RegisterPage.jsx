@@ -39,9 +39,13 @@ export const RegisterPage = () => {
   }
 
   const handleSubmitForm = async (formData) => {
-    const response = await handleRegister(formData.username, formData.email, formData.phoneNumber, formData.password)
-    if (response.token) {
-      navigate('/contacts')
+    try {
+      const response = await handleRegister(formData.username, formData.email, formData.phoneNumber, formData.password)
+      if (response.token) {
+        navigate('/contacts')
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 

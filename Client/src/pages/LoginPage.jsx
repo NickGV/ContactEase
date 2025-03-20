@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom'
 import illustration from '../assets/illustration.png'
 import useAuth from '../hooks/useAuth'
 import useFormValidation from '../hooks/useForm'
-import { login } from '../services/authService'
 
 const initialState = {
   email: '',
@@ -25,13 +24,13 @@ export const LoginPage = () => {
   const { handleLogin } = useAuth()
 
   const onSubmit = async (values) => {
-    const response = await handleLogin(values.email, values.password)
-    console.log(response)
-    if (response.token) {
-      navigate('/contacts')
-      return { success: true }
-    } else {
-      return { success: false }
+    try {
+      const response = await handleLogin(values.email, values.password)
+      if (response.token) {
+        navigate('/contacts')
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 

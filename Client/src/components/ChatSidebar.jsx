@@ -16,8 +16,6 @@ export const ChatSidebar = () => {
   const [inviteContact, setInviteContact] = useState(null)
   const [showContactSelector, setShowContactSelector] = useState(false)
 
-  console.log('Chats state:', chats)
-
   const activeChats = contacts.filter(contact =>
     chats.some(chat =>
       chat.participants.some(participant => participant._id === contact.userId)
@@ -41,17 +39,20 @@ export const ChatSidebar = () => {
       setSelectedChat(null)
       return
     }
-
-    const response = await createOrGetChat(contact.phoneNumber)
-    if (response.message && response.message === 'Contact not found') {
-      setInviteContact(contact)
-      setShowInvitePopup(true)
-    } else {
-      setChats((prevChats) =>
-        prevChats.map((chat) =>
-          chat._id === response.chat._id ? { ...chat, hasNotification: false } : chat
+    try {
+      const response = await createOrGetChat(contact.phoneNumber)
+      if (response.message && response.message === 'Contact not found') {
+        setInviteContact(contact)
+        setShowInvitePopup(true)
+      } else {
+        setChats((prevChats) =>
+          prevChats.map((chat) =>
+            chat._id === response.chat._id ? { ...chat, hasNotification: false } : chat
+          )
         )
-      )
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 

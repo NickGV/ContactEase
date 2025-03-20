@@ -16,7 +16,7 @@ export const getOrCreateChat = async (phoneNumber) => {
     const response = await axios.post(`${API_URL}`, { phoneNumber }, getChatHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error.response?.data?.message || 'An error occurred while fetching chat'
   }
 }
 
@@ -25,7 +25,7 @@ export const getMessages = async (chatId) => {
     const response = await axios.get(`${API_URL}/${chatId}/messages`, getChatHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error.response?.data?.message || 'An error occurred while fetching messages'
   }
 }
 
@@ -34,7 +34,7 @@ export const sendMessage = async (chatId, content) => {
     const response = await axios.post(`${API_URL}/send`, { chatId, content }, getChatHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error.response?.data?.message || 'An error occurred while sending message'
   }
 }
 
@@ -43,7 +43,7 @@ export const deleteChat = async (chatId) => {
     const response = await axios.delete(`${API_URL}/${chatId}`, getChatHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error.response?.data?.message || 'An error occurred while deleting chat'
   }
 }
 
@@ -52,6 +52,6 @@ export const getChats = async () => {
     const response = await axios.get(`${API_URL}/chats`, getChatHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    return error.response?.data?.message || 'An error occurred while fetching chats'
   }
 }

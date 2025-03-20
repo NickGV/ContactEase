@@ -55,15 +55,20 @@ export const ContactsProvider = ({ children }) => {
       toast.success('Contact added')
       getUserContacts()
     } catch (error) {
-      return toast.error(error)
+      toast.error(error)
+      throw error
     }
   }
 
   const deleteContactById = async (id) => {
-    await deleteContact(id)
-    getUserContacts()
-    toast.error('Deleted')
-    setSelectedContact(null)
+    try {
+      await deleteContact(id)
+      getUserContacts()
+      toast.success('Contact deleted')
+    } catch (error) {
+      toast.error(error)
+      throw error
+    }
   }
 
   const handleSelectedContact = (contact) => {
@@ -76,25 +81,27 @@ export const ContactsProvider = ({ children }) => {
   }
 
   const addToFavorites = async (id) => {
-    const contact = await getContactById(id)
-    const isFavorite = !contact.isFavorite
-    const data = {
-      id,
-      isFavorite
-    }
     try {
-      const UptdatedContact = await updateContact(data)
-      setSelectedContact(UptdatedContact)
-      getUserContacts()
-    } catch (error) {
-      return toast.error(error)
-    }
+      const contact = await getContactById(id)
+      const isFavorite = !contact.isFavorite
 
-    toast.success(
-      contact.isFavorite
-        ? 'Removed from favorites'
-        : 'Added to favorites'
-    )
+      const data = {
+        ...contact,
+        id: contact._id,
+        isFavorite
+      }
+
+      const updatedContact = await updateContact(data)
+      setSelectedContact(updatedContact)
+      getUserContacts()
+
+      toast.success(
+        isFavorite ? 'Added to favorites' : 'Removed from favorites'
+      )
+    } catch (error) {
+      toast.error('Failed to update favorite status')
+      console.error(error)
+    }
   }
 
   const handleEditContact = (contact) => {
@@ -111,12 +118,12 @@ export const ContactsProvider = ({ children }) => {
       await updateContact(editedContact)
       getUserContacts()
       setSelectedContact(editedContact)
+      toast.success('Contact updated')
+      setEditingContact(null)
     } catch (error) {
-      return toast.error(error)
+      toast.error(error)
+      throw error
     }
-
-    toast.success('Contact updated')
-    setEditingContact(null)
   }
 
   const resetSelectedContact = () => {

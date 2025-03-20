@@ -10,7 +10,6 @@ export const NavBar = () => {
   const { chats } = useChat()
   const [showMenu, setShowMenu] = useState(false)
   const navigate = useNavigate()
-  console.log(chats)
   const toggleMenu = () => {
     setShowMenu(!showMenu)
   }

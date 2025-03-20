@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import useFormValidation from '../hooks/useForm'
 import useContacts from '../hooks/useContacts'
+import { useEffect } from 'react'
 
 export const EditContactForm = () => {
-  const { editingContact, editContact } = useContacts
+  const { editingContact, editContact } = useContacts()
 
   const INITIAL_STATE = {
     name: editingContact?.name || '',
