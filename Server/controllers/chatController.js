@@ -2,7 +2,7 @@ const Message = require("../models/Message");
 const Chat = require("../models/Chat");
 const User = require("../models/User");
 
-exports.getOrCreateChat = async (req, res) => {
+exports.getOrCreateChat = async (req, res, next) => {
   const { phoneNumber } = req.body;
   const userId = req.user.id;
   try {
@@ -41,7 +41,7 @@ exports.getOrCreateChat = async (req, res) => {
   }
 };
 
-exports.getMessages = async (req, res) => {
+exports.getMessages = async (req, res, next) => {
   const { chatId } = req.params;
   try {
     const chat = await Chat.findById(chatId).populate({
@@ -61,7 +61,7 @@ exports.getMessages = async (req, res) => {
   }
 };
 
-exports.sendMessage = async (req, res) => {
+exports.sendMessage = async (req, res, next) => {
   const { chatId, content } = req.body;
   try {
     const chat = await Chat.findById(chatId);
@@ -93,7 +93,7 @@ exports.sendMessage = async (req, res) => {
   }
 };
 
-exports.deleteChat = async (req, res) => {
+exports.deleteChat = async (req, res, next) => {
  const {chatId} = req.params
 
  try{
@@ -111,7 +111,7 @@ exports.deleteChat = async (req, res) => {
  }
 }
 
-exports.getChats = async (req, res) => {
+exports.getChats = async (req, res, next) => {
   const userId = req.user.id;
   try {
     const chats = await Chat.find({ participants: userId }).populate('participants', 'username phoneNumber email');

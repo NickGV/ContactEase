@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   const { username, email, phoneNumber, password } = req.body;
 
   try {
@@ -32,7 +32,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -60,7 +60,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user.id);
     res.json({ message: "User deleted" });
@@ -69,7 +69,7 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-exports.getUser = async (req, res) => {
+exports.getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     res.json(user);
@@ -79,7 +79,7 @@ exports.getUser = async (req, res) => {
   }
 }
 
-exports.getUserById = async (req, res) => {
+exports.getUserById = async (req, res, next) => {
   try {
     const user =
       await User.findById(req.params.id).select("-password");
@@ -90,6 +90,6 @@ exports.getUserById = async (req, res) => {
   }
 }
 
-exports.logout = async (req, res) => {
+exports.logout = async (req, res, next) => {
   res.json({ message: "Logout successful" });
 };
