@@ -103,8 +103,6 @@ exports.getContactById = async (req, res, next) => {
       return next(error);
     }
 
-    console.log(contact);
-
     res.json(contact);
   } catch (error) {
     next(error);

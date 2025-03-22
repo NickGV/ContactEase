@@ -169,7 +169,7 @@ export const ChatProvider = ({ children }) => {
       }
       return response
     } catch (error) {
-      toast.error(error)
+      console.log(error)
       throw error
     }
   }

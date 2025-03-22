@@ -18,11 +18,13 @@ export const ChatSidebar = () => {
 
   const activeChats = contacts.filter(contact =>
     chats.some(chat =>
-      chat.participants.some(participant => participant._id === contact.userId)
+      chat.participants.some(
+        participant => participant.phoneNumber === contact.phoneNumber
+      )
     )
   )
 
-  const filteredContacts = activeChats.filter(contact => {
+  const filteredChats = activeChats.filter(contact => {
     if (searchTerm.trim() === '') {
       return true
     }
@@ -41,10 +43,7 @@ export const ChatSidebar = () => {
     }
     try {
       const response = await createOrGetChat(contact.phoneNumber)
-      if (response.message && response.message === 'Contact not found') {
-        setInviteContact(contact)
-        setShowInvitePopup(true)
-      } else {
+      if (response.chat) {
         setChats((prevChats) =>
           prevChats.map((chat) =>
             chat._id === response.chat._id ? { ...chat, hasNotification: false } : chat
@@ -52,7 +51,7 @@ export const ChatSidebar = () => {
         )
       }
     } catch (error) {
-      console.error(error)
+      console.error('Error in handleChatClick:', error)
     }
   }
 
@@ -68,8 +67,16 @@ export const ChatSidebar = () => {
   }
 
   const handleNewChatClick = async (contact) => {
-    await createOrGetChat(contact.phoneNumber)
-    setShowContactSelector(false)
+    try {
+      await createOrGetChat(contact.phoneNumber)
+      setShowContactSelector(false)
+    } catch (error) {
+      if (error === 'Contact not found') {
+        setInviteContact(contact)
+        setShowInvitePopup(true)
+        setShowContactSelector(false)
+      }
+    }
   }
 
   return (
@@ -91,14 +98,14 @@ export const ChatSidebar = () => {
           </button>
         </div>
           )
-        : filteredContacts && filteredContacts.length > 0
+        : filteredChats && filteredChats.length > 0
           ? (
         <div className="flex md:flex-col">
           <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
           <ul className={`m-w-full flex md:grid ${selectedChat ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
-            {filteredContacts.map((contact) => (
+            {filteredChats.map((contact) => (
               <li className="md:border-b" key={contact._id}>
                 <div
                   className={`relative flex gap-3 md:justify-between p-4 md:bg-black-bg hover:cursor-pointer hover:opacity-90 hover:scale-105 transition-all w-20 md:w-full rounded-lg ${
