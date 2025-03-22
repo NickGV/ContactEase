@@ -3,6 +3,7 @@ import { getMessages, getOrCreateChat, sendMessage, getChats, deleteChat } from 
 import { io } from 'socket.io-client'
 import { toast } from 'sonner'
 import { getUserById } from '../services/authService'
+
 export const ChatContext = createContext()
 
 export const ChatProvider = ({ children }) => {
@@ -12,7 +13,6 @@ export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([])
   const [isConnected, setIsConnected] = useState(false)
 
-  // Inicializar socket
   useEffect(() => {
     const newSocket = io('http://localhost:3000', {
       query: { token: localStorage.getItem('token') },
@@ -30,55 +30,41 @@ export const ChatProvider = ({ children }) => {
     }
   }, [])
 
-  // Manejar eventos del socket
   useEffect(() => {
     if (!socket) return
 
     const onConnect = () => {
-      console.log('Connected to socket', socket.id)
       setIsConnected(true)
 
       if (chats && chats.length > 0) {
-        console.log(`Joining ${chats.length} chats:`, chats.map(c => c._id))
-        const chatIds = chats.map(chat => chat._id)
+        const chatIds = chats.map((chat) => chat._id)
         socket.emit('joinAllChats', { chatIds })
 
         if (selectedChat) {
           socket.emit('viewingChat', { chatId: selectedChat._id })
         }
-      } else {
-        console.log('No chats to join')
       }
     }
 
     const onDisconnect = () => {
-      console.log('Disconnected from socket')
       setIsConnected(false)
     }
 
-    const onConnectError = (error) => {
-      console.log('Socket connection error:', error)
+    const onConnectError = () => {
       setIsConnected(false)
     }
 
     const handleNewMessageNotification = async ({ chatId, message }) => {
-      console.log('Notification received:', chatId, message)
-
       try {
         const sender = await getUserById(message.senderId)
         toast.info(`New message from ${sender?.username || 'Someone'}`)
 
-        setChats(prevChats => {
-          console.log('Current chats:', prevChats)
-          console.log('Looking for chat with ID:', chatId)
-
-          const chatExists = prevChats.some(chat => chat._id === chatId)
-          console.log('Chat exists:', chatExists)
+        setChats((prevChats) => {
+          const chatExists = prevChats.some((chat) => chat._id === chatId)
 
           if (!chatExists) {
-            console.log('Chat not found in state, fetching chats again')
-            getChats().then(newChats => {
-              const updatedChats = newChats.map(chat => ({
+            getChats().then((newChats) => {
+              const updatedChats = newChats.map((chat) => ({
                 ...chat,
                 hasNotification: chat._id === chatId ? true : chat.hasNotification || false
               }))
@@ -87,9 +73,8 @@ export const ChatProvider = ({ children }) => {
             return prevChats
           }
 
-          return prevChats.map(chat => {
+          return prevChats.map((chat) => {
             if (chat._id === chatId) {
-              console.log('Setting notification for chat:', chat._id)
               return { ...chat, hasNotification: true }
             }
             return chat
@@ -102,7 +87,6 @@ export const ChatProvider = ({ children }) => {
     }
 
     const handleMessage = (message) => {
-      console.log('Message received:', message)
       setMessages((prevMessages) => [...prevMessages, message])
     }
 
@@ -125,9 +109,8 @@ export const ChatProvider = ({ children }) => {
     const fetchChats = async () => {
       try {
         const response = await getChats()
-        console.log('Fetched chats:', response)
 
-        const chatsWithNotifications = response.map(chat => ({
+        const chatsWithNotifications = response.map((chat) => ({
           ...chat,
           hasNotification: false
         }))
@@ -157,8 +140,8 @@ export const ChatProvider = ({ children }) => {
       const response = await getMessages(chatId)
       setMessages(response)
     } catch (error) {
-      toast.error('Failed to load messages')
-      return error
+      toast.error(error)
+      throw error
     }
   }
 
@@ -186,7 +169,8 @@ export const ChatProvider = ({ children }) => {
       }
       return response
     } catch (error) {
-      return error
+      console.log(error)
+      throw error
     }
   }
 
@@ -199,31 +183,31 @@ export const ChatProvider = ({ children }) => {
         if (selectedChat && selectedChat._id === chatId) {
           setSelectedChat(null)
           setMessages([])
-          // Informar al servidor que ya no estamos viendo este chat
           socket.emit('leftChat')
         }
       }
-      toast.error('Chat deleted')
+      toast.success('Chat deleted')
       return response
     } catch (error) {
-      return error
+      toast.error(error)
+      throw error
     }
   }
 
-  console.log('Chats with notifications:', chats.filter(chat => chat.hasNotification))
-
   return (
-    <ChatContext.Provider value={{
-      getChatMessages,
-      addMessage,
-      createOrGetChat,
-      deleteChatById,
-      messages,
-      selectedChat,
-      setSelectedChat,
-      chats,
-      setChats
-    }}>
+    <ChatContext.Provider
+      value={{
+        getChatMessages,
+        addMessage,
+        createOrGetChat,
+        deleteChatById,
+        messages,
+        selectedChat,
+        setSelectedChat,
+        chats,
+        setChats
+      }}
+    >
       {children}
     </ChatContext.Provider>
   )

@@ -1,18 +1,19 @@
 import { Toaster } from 'sonner'
-import { useState, useContext } from 'react'
-import { ContactsProvider } from './context/ContactsProvider'
+import { useState } from 'react'
 import { ContactPage } from './pages/ContactsPage'
 import { ChatPage } from './pages/ChatPage'
 import { Route, Routes } from 'react-router-dom'
 import { LoginPage } from './pages/LoginPage'
 import { Layout } from './components/Layout'
 import { RegisterPage } from './pages/RegisterPage'
-import { AuthProvider, AuthContext } from './context/AuthContext'
+import { ContactsProvider } from './context/ContactsContext'
+import { AuthProvider } from './context/AuthContext'
 import { ChatProvider } from './context/ChatContext'
+import useAuth from './hooks/useAuth'
 
 function AppContent () {
   const [showForm, setShowForm] = useState(false)
-  const { user } = useContext(AuthContext)
+  const { user } = useAuth()
 
   const toggleAddContactForm = () => {
     setShowForm(!showForm)

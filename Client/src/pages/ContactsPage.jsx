@@ -1,13 +1,12 @@
-import { useContext } from 'react'
-import { ContactsContext } from '../context/ContactsContext'
 import { ContactList } from '../components/ContactList'
 import { ContactDetails } from '../components/ContactDetails'
 import { EditContactForm } from '../components/EditContactForm'
 import { AddContactForm } from '../components/AddContactForm'
 import { Header } from '../components/Header'
+import useContacts from '../hooks/useContacts'
 
 export const ContactPage = ({ toggleAddContactForm, showForm }) => {
-  const { editingContact, selectedContact } = useContext(ContactsContext)
+  const { editingContact, selectedContact } = useContacts()
   return (
     <>
      <Header toggleAddContactForm={toggleAddContactForm} />

@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   const { username, email, phoneNumber, password } = req.body;
 
   try {
@@ -10,9 +10,9 @@ exports.register = async (req, res) => {
       email,
     });
     if (user) {
-      return res.status(400).json({
-        message: "User already exists",
-      });
+      const error = new Error("User already exists");
+      error.statusCode = 400;
+      return next(error);
     }
 
     user = new User({
@@ -28,12 +28,11 @@ exports.register = async (req, res) => {
     });
     res.json({ token });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server error");
+        next(error);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -41,15 +40,15 @@ exports.login = async (req, res) => {
       email,
     });
     if (!user) {
-      return res.status(400).json({
-        message: "Invalid credentials",
-      });
+      const error = new Error("Invalid credentials");
+      error.statusCode = 400;
+      return next(error);
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({
-        message: "Invalid credentials",
-      });
+      const error = new Error("Invalid credentials");
+      error.statusCode = 400;
+      return next(error);
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -57,44 +56,40 @@ exports.login = async (req, res) => {
     });
     res.json({ token });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server error");
+    next(error);
   }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user.id);
     res.json({ message: "User deleted" });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server error");
+    next(error);
   }
 };
 
-exports.getUser = async (req, res) => {
+exports.getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     res.json(user);
   }
   catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server error");
+    next(error);
   }
 }
 
-exports.getUserById = async (req, res) => {
+exports.getUserById = async (req, res, next) => {
   try {
     const user =
       await User.findById(req.params.id).select("-password");
     res.json(user);
   }
   catch (error) {
-    console.error(error.message);
-    res.status(500).send("Server error");
+    next(error);
   }
 }
 
-exports.logout = async (req, res) => {
+exports.logout = async (req, res, next) => {
   res.json({ message: "Logout successful" });
 };

@@ -16,7 +16,7 @@ export const register = async (username, email, phoneNumber, password) => {
     const response = await axios.post(`${API_URL}/register`, { username, email, phoneNumber, password })
     return response.data
   } catch (error) {
-    return error.response.data
+    throw error.response?.data?.message || 'An error occurred while registering'
   }
 }
 
@@ -25,7 +25,7 @@ export const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/login`, { email, password })
     return response.data
   } catch (error) {
-    return error.response.data
+    throw error.response?.data?.message || 'An error occurred while logging in'
   }
 }
 
@@ -34,7 +34,7 @@ export const logout = async () => {
     const response = await axios.get(`${API_URL}/logout`)
     return response.data
   } catch (error) {
-    return error.response.data
+    throw error.response?.data?.message || 'An error occurred while logging out'
   }
 }
 
@@ -43,7 +43,7 @@ export const deleteUser = async () => {
     const response = await axios.delete(`${API_URL}/delete`, getAuthHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    throw error.response?.data?.message || 'An error occurred while deleting user'
   }
 }
 
@@ -52,7 +52,7 @@ export const getUser = async () => {
     const response = await axios.get(`${API_URL}/user`, getAuthHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    throw error.response?.data?.message || 'An error occurred while featching user'
   }
 }
 
@@ -61,6 +61,6 @@ export const getUserById = async (id) => {
     const response = await axios.get(`${API_URL}/user/${id}`, getAuthHeaders())
     return response.data
   } catch (error) {
-    return error.response.data
+    throw error.response?.data?.message || 'An error occurred while featching user'
   }
 }

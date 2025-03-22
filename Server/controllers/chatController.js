@@ -2,13 +2,15 @@ const Message = require("../models/Message");
 const Chat = require("../models/Chat");
 const User = require("../models/User");
 
-exports.getOrCreateChat = async (req, res) => {
+exports.getOrCreateChat = async (req, res, next) => {
   const { phoneNumber } = req.body;
   const userId = req.user.id;
   try {
     const contact = await User.findOne({ phoneNumber });
     if (!contact) {
-      return res.status(404).json({ message: "Contact not found" });
+      const error = new Error("Contact not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     let chat = await Chat.findOne({
@@ -34,12 +36,12 @@ exports.getOrCreateChat = async (req, res) => {
     );
 
     res.status(201).json({ chat });
-  } catch (err) {
-    res.status(500).send("Server error");
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.getMessages = async (req, res) => {
+exports.getMessages = async (req, res, next) => {
   const { chatId } = req.params;
   try {
     const chat = await Chat.findById(chatId).populate({
@@ -48,26 +50,32 @@ exports.getMessages = async (req, res) => {
     });
 
     if (!chat) {
-      return res.status(404).json({ message: "Chat not found" });
+      const error = new Error("Chat not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     res.json(chat.messages);
-  } catch (err) {
-    res.status(500).send("Server error");
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.sendMessage = async (req, res) => {
+exports.sendMessage = async (req, res, next) => {
   const { chatId, content } = req.body;
   try {
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return res.status(404).json({ message: "Chat not found" });
+      const error = new Error("Chat not found");
+      error.statusCode = 404;
+      return next(error)
     }
 
     if (!chat.participants.includes(req.user.id)) {
-      return res.status(403).json({ message: 'Not authorized' });
+      const error = new Error("Not authorized");
+      error.statusCode = 403;
+      return next(error);
     }
 
     const message = new Message({
@@ -80,34 +88,35 @@ exports.sendMessage = async (req, res) => {
     io.to(chatId).emit("sendMessage", message);
 
     res.status(201).json(message);
-  } catch (err) {
-    res.status(500).send("Server error");
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.deleteChat = async (req, res) => {
+exports.deleteChat = async (req, res, next) => {
  const {chatId} = req.params
 
  try{
   const chat = await Chat.findById(chatId)
 
   if(!chat){
-    return res.status(404).json({message: "Chat not found"})
+    const error = new Error("Chat not found")
+    error.statusCode = 404
+    return next(error)
   }
   await Chat.findByIdAndDelete(chatId)
   res.json({message: "Chat deleted"})
-
- } catch (err){
-   res.status(500).send("Server error")
+ } catch (error){
+   next(error)
  }
 }
 
-exports.getChats = async (req, res) => {
+exports.getChats = async (req, res, next) => {
   const userId = req.user.id;
   try {
     const chats = await Chat.find({ participants: userId }).populate('participants', 'username phoneNumber email');
     res.json(chats)
-  }catch(err){
-    res.status(500).send("Server error");
+  }catch(error){
+    next(error)
   }
 }

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react'
 import { login, register, logout, deleteUser, getUser } from '../services/authService'
+import { toast } from 'sonner'
 
 export const AuthContext = createContext()
 
@@ -8,21 +9,17 @@ export const AuthProvider = ({ children }) => {
 
   const handleRegister = async (username, email, phoneNumber, password) => {
     const cleanedPhoneNumber = phoneNumber.replace(/\s+/g, '')
-    const response = await register(username, email, Number(cleanedPhoneNumber), password)
-    if (response.token) {
-      localStorage.setItem('token', response.token)
-      getUserData()
+    try {
+      const response = await register(username, email, Number(cleanedPhoneNumber), password)
+      if (response.token) {
+        localStorage.setItem('token', response.token)
+        getUserData()
+      }
+      return response
+    } catch (error) {
+      toast.error(error)
+      throw error
     }
-    return response
-  }
-
-  const handleLogin = async (email, password) => {
-    const response = await login(email, password)
-    if (response.token) {
-      localStorage.setItem('token', response.token)
-      getUserData()
-    }
-    return response
   }
 
   const handleLogout = async () => {
@@ -32,11 +29,30 @@ export const AuthProvider = ({ children }) => {
     return response
   }
 
+  const handleLogin = async (email, password) => {
+    try {
+      const response = await login(email, password)
+      if (response.token) {
+        localStorage.setItem('token', response.token)
+        getUserData()
+      }
+      return response
+    } catch (error) {
+      toast.error(error)
+      throw error
+    }
+  }
+
   const handleDeleteUser = async () => {
-    const response = await deleteUser()
-    localStorage.removeItem('token')
-    setUser(null)
-    return response
+    try {
+      const response = await deleteUser()
+      localStorage.removeItem('token')
+      setUser(null)
+      return response
+    } catch (error) {
+      toast.error(error)
+      throw error
+    }
   }
 
   const getUserData = async () => {

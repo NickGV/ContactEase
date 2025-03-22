@@ -1,11 +1,11 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { ContactItem } from './ContactItem'
-import { ContactsContext } from '../context/ContactsContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import useContacts from '../hooks/useContacts'
 
 export const ContactList = ({ toggleAddContactForm }) => {
-  const { contacts, searchResultsFound, searchTerm, setSearchTerm, selectedContact } = useContext(ContactsContext)
+  const { contacts, searchResultsFound, searchTerm, setSearchTerm, selectedContact } = useContacts()
   const [filter, setFilter] = useState('all')
 
   const filteredContacts = contacts.filter(contact => {
