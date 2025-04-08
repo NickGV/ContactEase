@@ -20,7 +20,7 @@ export const ContactDetails = () => {
   } = useContacts()
 
   return (
-    <div className="w-auto h-full  mx-2 md:mr-4 md:mb-4 md:mt-4 p-3 shadow-md shadow-slate-400 rounded-md flex flex-col bg-black-bg border-2 border-orange-400 flex-1">
+    <div className="w-auto h-full  mx-2 md:mr-4 md:mb-4 md:mt-4 p-3 shadow-md shadow-slate-400 rounded-md flex flex-col bg-black-bg   flex-1">
       {!selectedContact
         ? (
         <div className="text-center md:text-2xl mt-5">

@@ -20,7 +20,6 @@ export const NavBar = () => {
     setMobileMenuOpen(!mobileMenuOpen)
   }
 
-  // Close mobile menu when navigating or resizing to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -46,7 +45,6 @@ export const NavBar = () => {
           ContactEase
         </h1>
 
-        {/* Mobile menu button */}
         <button
           className="md:hidden text-white p-2"
           onClick={toggleMobileMenu}
@@ -116,7 +114,6 @@ export const NavBar = () => {
         </ul>
       </div>
 
-      {/* Mobile navigation */}
       {mobileMenuOpen && (
         <div className="md:hidden mt-4 bg-gray-900 rounded-lg p-4 animate-fadeIn">
           <ul className="flex flex-col gap-4">
