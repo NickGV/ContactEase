@@ -89,7 +89,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
-          <div className="flex flex-col items-center justify-center">
+          <div className="md:hidden flex flex-col items-center justify-center">
             <button
               type="button"
               className="flex items-center justify-center text-white-btn-text bg-orange-btn hover:bg-orange-500 rounded-full h-16 w-16 shadow-lg transition-all hover:scale-105 active:scale-95"
