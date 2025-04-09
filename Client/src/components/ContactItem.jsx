@@ -75,7 +75,7 @@ export const ContactItem = ({
           <FontAwesomeIcon icon={faUser} className="w-6" />
         </div>
         <div className="text-center md:text-left">
-          <p className="font-bold text-white text-sm md:text-lg">
+          <p className="font-medium text-black md:text-white text-sm md:text-lg">
             {name}
           </p>
           <p className="hidden md:block md:text-md lg:text-lg">{phoneNumber}</p>
@@ -89,7 +89,7 @@ export const ContactItem = ({
           className={`hidden text-2xl sm:flex md:flex items-center relative hover:scale-150 transition-all ${
             isFavorite ? 'text-yellow-500' : 'text-gray-500'
           }`}
-          title="Agregar a favoritos (Agregar a lista de favoritos)"
+          title="Add to favorites (Add to favorites list)"
           onClick={handleFavoritesClick}
           onMouseEnter={() => setHoveredButton('favorite')}
           onMouseLeave={() => setHoveredButton(null)}

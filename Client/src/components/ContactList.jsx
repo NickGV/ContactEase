@@ -7,6 +7,7 @@ import useContacts from '../hooks/useContacts'
 export const ContactList = ({ toggleAddContactForm }) => {
   const { contacts, searchResultsFound, searchTerm, setSearchTerm, selectedContact } = useContacts()
   const [filter, setFilter] = useState('all')
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const filteredContacts = contacts.filter(contact => {
     if (filter === 'favorites') {
@@ -21,37 +22,50 @@ export const ContactList = ({ toggleAddContactForm }) => {
 
   return (
     <div className='m-w-full w-11/12 md:m-4 overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0'>
-      <div className="flex justify-center gap-4 mb-4">
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="filter"
-            value="all"
-            checked={filter === 'all'}
-            onChange={() => setFilter('all')}
-          />
-          All
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="filter"
-            value="favorites"
-            checked={filter === 'favorites'}
-            onChange={() => setFilter('favorites')}
-          />
-          Favorites
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="filter"
-            value="recent"
-            checked={filter === 'recent'}
-            onChange={() => setFilter('recent')}
-          />
-          Recently Added
-        </label>
+                  <div className="relative mb-4">
+        <button
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 font-medium transition-colors"
+          onClick={() => setIsFilterOpen(!isFilterOpen)}
+        >
+          Filters
+          <svg className={`w-4 h-4 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        {isFilterOpen && (
+          <div className="absolute top-full left-0 mt-1 w-48 bg-gray-300 rounded-md shadow-lg z-10 text-black">
+            <div className="py-1">
+              <button
+                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${filter === 'all' ? 'bg-gray-100 font-medium' : ''}`}
+                onClick={() => {
+                  setFilter('all')
+                  setIsFilterOpen(false)
+                }}
+              >
+                All
+              </button>
+              <button
+                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${filter === 'favorites' ? 'bg-gray-100 font-medium' : ''}`}
+                onClick={() => {
+                  setFilter('favorites')
+                  setIsFilterOpen(false)
+                }}
+              >
+                Favorites
+              </button>
+              <button
+                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${filter === 'recent' ? 'bg-gray-100 font-medium' : ''}`}
+                onClick={() => {
+                  setFilter('recent')
+                  setIsFilterOpen(false)
+                }}
+              >
+                Recently Added
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       {!searchResultsFound
         ? (
@@ -71,19 +85,20 @@ export const ContactList = ({ toggleAddContactForm }) => {
           )
         : filteredContacts && filteredContacts.length > 0
           ? (
-        <div className="flex md:flex-col ">
+        <div className="flex md:flex-col align-items-center">
           <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
           <div className="md:hidden flex flex-col items-center justify-center">
             <button
               type="button"
-              className="flex items-center text-center justify-center md:hidden mt-3 text-white-btn-text bg-gray-500 rounded-full h-16 w-16"
+              className="flex items-center justify-center text-white-btn-text bg-orange-btn hover:bg-orange-500 rounded-full h-16 w-16 shadow-lg transition-all hover:scale-105 active:scale-95"
               onClick={toggleAddContactForm}
+              aria-label="Add new contact"
             >
               <FontAwesomeIcon icon={faUserPlus} className="text-3xl" />
             </button>
-            <span className="text-sm text-center text-slate-700">
+            <span className="mt-1 text-sm text-slate-700">
               Add contact
             </span>
           </div>

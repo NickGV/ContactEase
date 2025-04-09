@@ -15,7 +15,7 @@ export const ContactPage = ({ toggleAddContactForm, showForm }) => {
           <ContactList toggleAddContactForm={toggleAddContactForm} />
       </div>
       {selectedContact && (
-        <div className="w-full md:w-2/3 h-5/6 md:h-95 lg:h-full flex flex-col flex-1 item-center ">
+        <div className="w-full p-2 md:pd-2 mt-6 md:mt-6 md:w-2/3 h-5/6 md:h-95 flex flex-col flex-1 item-center ">
           {editingContact ? <EditContactForm /> : <ContactDetails />}
         </div>
       )}
