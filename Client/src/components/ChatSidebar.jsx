@@ -157,10 +157,10 @@ export const ChatSidebar = () => {
           Add chat
         </span>
         <button
-          className="flex items-center text-center justify-center mt-2 text-white-btn-text bg-black-bg rounded-full h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 group-hover:scale-110 transition-all shadow-lg"
+          className="flex items-center text-center justify-center mt-2 text-white-btn-text bg-orange-btn hover:bg-orange-500 rounded-full h-14 w-14 md:h-16 md:w-16 group-hover:scale-110 transition-all shadow-lg"
           onClick={() => setShowContactSelector(!showContactSelector)}
         >
-          <FontAwesomeIcon icon={faUserPlus} className="text-xl sm:text-2xl md:text-3xl" />
+          <FontAwesomeIcon icon={faUserPlus} className="text-2xl md:text-3xl"/>
         </button>
       </div>
       {showContactSelector && (
