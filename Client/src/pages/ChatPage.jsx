@@ -10,7 +10,7 @@ export const ChatPage = () => {
             <ChatSidebar />
         </div>
         {selectedChat && (
-          <div className="w-full h-2/3 sm:h-3/5 md:h-full md:flex-1 flex flex-col transition-all duration-300">
+          <div className="w-full h-full md:flex-1 flex flex-col transition-all duration-300">
             <ChatWindow/>
           </div>
         )}

@@ -152,7 +152,7 @@ export const ChatSidebar = () => {
       {showInvitePopup && (
         <InvitePopup contact={inviteContact} onClose={() => setShowInvitePopup(false)} />
       )}
-      <div className="fixed bottom-4 sm:bottom-8 md:bottom-12 right-4 sm:right-8 md:right-12 flex flex-col items-center justify-center group z-10">
+      <div className={`${selectedChat ? 'hidden' : 'flex'} fixed bottom-4 sm:bottom-8 md:bottom-12 right-4 sm:right-8 md:right-12 flex flex-col items-center justify-center group z-10`}>
         <span className="opacity-0 text-white text-center  sm:text-sm md:text-base mt-2 sm:mt-3 group-hover:opacity-100 transition-opacity bg-black-bg rounded-lg p-1">
           Add chat
         </span>
