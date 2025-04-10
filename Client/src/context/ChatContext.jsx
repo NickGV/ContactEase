@@ -123,7 +123,7 @@ export const ChatProvider = ({ children }) => {
     }
 
     fetchChats()
-  }, [])
+  }, [chats])
 
   useEffect(() => {
     if (!socket || !isConnected) return
@@ -169,7 +169,7 @@ export const ChatProvider = ({ children }) => {
       }
       return response
     } catch (error) {
-      console.log(error)
+      toast.error(error)
       throw error
     }
   }
