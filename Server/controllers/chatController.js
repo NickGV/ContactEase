@@ -15,6 +15,7 @@ exports.getOrCreateChat = async (req, res, next) => {
 
     let chat = await Chat.findOne({
       participants: { $all: [userId, contact._id] },
+      deletedFor: { $ne: userId }
     });
 
     if (chat) {
@@ -24,8 +25,23 @@ exports.getOrCreateChat = async (req, res, next) => {
       return res.json({ chat, messages });
     }
 
+    chat = await Chat.findOne({
+      participants: { $all: [userId, contact._id] },
+      deletedFor: userId
+    });
+
+    if (chat) {
+      chat.deletedFor = chat.deletedFor.filter(id => id.toString() !== userId);
+      await chat.save();
+      const messages = await Message.find({ chatId: chat._id }).sort({
+        timestamp: 1,
+      });
+      return res.json({ chat, messages });
+    }
+
     chat = new Chat({
       participants: [userId, contact._id],
+      deletedFor: []
     });
 
     await chat.save();
@@ -43,6 +59,8 @@ exports.getOrCreateChat = async (req, res, next) => {
 
 exports.getMessages = async (req, res, next) => {
   const { chatId } = req.params;
+  const userId = req.user.id;
+  
   try {
     const chat = await Chat.findById(chatId).populate({
       path: "messages",
@@ -50,6 +68,12 @@ exports.getMessages = async (req, res, next) => {
     });
 
     if (!chat) {
+      const error = new Error("Chat not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    if (chat.deletedFor.includes(userId)) {
       const error = new Error("Chat not found");
       error.statusCode = 404;
       return next(error);
@@ -78,6 +102,11 @@ exports.sendMessage = async (req, res, next) => {
       return next(error);
     }
 
+    if (chat.deletedFor.includes(req.user.id)) {
+      chat.deletedFor = chat.deletedFor.filter(id => id.toString() !== req.user.id);
+      await chat.save();
+    }
+
     const message = new Message({
       chatId,
       senderId: req.user.id,
@@ -95,6 +124,7 @@ exports.sendMessage = async (req, res, next) => {
 
 exports.deleteChat = async (req, res, next) => {
  const {chatId} = req.params
+ const userId = req.user.id;
 
  try{
   const chat = await Chat.findById(chatId)
@@ -104,8 +134,19 @@ exports.deleteChat = async (req, res, next) => {
     error.statusCode = 404
     return next(error)
   }
-  await Chat.findByIdAndDelete(chatId)
-  res.json({message: "Chat deleted"})
+
+  if (!chat.participants.includes(userId)) {
+    const error = new Error("Not authorized");
+    error.statusCode = 403;
+    return next(error);
+  }
+
+  if (!chat.deletedFor.includes(userId)) {
+    chat.deletedFor.push(userId);
+    await chat.save();
+  }
+  
+  res.json({message: "Chat deleted for you"})
  } catch (error){
    next(error)
  }
@@ -114,7 +155,11 @@ exports.deleteChat = async (req, res, next) => {
 exports.getChats = async (req, res, next) => {
   const userId = req.user.id;
   try {
-    const chats = await Chat.find({ participants: userId }).populate('participants', 'username phoneNumber email');
+    const chats = await Chat.find({ 
+      participants: userId,
+      deletedFor: { $ne: userId }
+    }).populate('participants', 'username phoneNumber email');
+    
     res.json(chats)
   }catch(error){
     next(error)

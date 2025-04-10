@@ -177,7 +177,7 @@ export const ChatProvider = ({ children }) => {
   const deleteChatById = async (chatId) => {
     try {
       const response = await deleteChat(chatId)
-      if (response.message && response.message === 'Chat deleted') {
+      if (response.message) {
         setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId))
 
         if (selectedChat && selectedChat._id === chatId) {
@@ -185,8 +185,9 @@ export const ChatProvider = ({ children }) => {
           setMessages([])
           socket.emit('leftChat')
         }
+
+        toast.success('Chat deleted for you')
       }
-      toast.success('Chat deleted')
       return response
     } catch (error) {
       toast.error(error)

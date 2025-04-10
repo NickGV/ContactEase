@@ -3,7 +3,6 @@ import { Message } from './Message'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import useChat from '../hooks/useChat'
-import { getContactById } from '../services/contactService'
 import { getUserById } from '../services/authService'
 
 export const ChatWindow = () => {
@@ -93,7 +92,7 @@ export const ChatWindow = () => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-4/5 md:w-full flex-1 rounded-lg px-4 py-2 mr-2 bg-gray-700 outline-none text-white hover:bg-gray-600 transition-colors duration-300"
+          className="flex-1 rounded-lg px-4 py-2 mr-2 bg-gray-700 outline-none text-white hover:bg-gray-600 transition-colors duration-300"
           placeholder="Type a message..."
         />
         <button

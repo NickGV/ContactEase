@@ -10,6 +10,11 @@ const chatSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Message',
   }],
+  deletedFor: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: []
+  }],
   createdAt: {
     type: Date,
     default: Date.now,
