@@ -3,7 +3,16 @@ import { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import useChat from '../hooks/useChat'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserCircle, faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faUserCircle,
+  faSignOutAlt,
+  faTrashAlt,
+  faHome,
+  faAddressBook,
+  faComments,
+  faBars,
+  faXmark
+} from '@fortawesome/free-solid-svg-icons'
 
 export const NavBar = () => {
   const { user, handleLogout, handleDeleteUser } = useContext(AuthContext)
@@ -12,14 +21,16 @@ export const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
 
-  const toggleMenu = () => {
-    setShowMenu(!showMenu)
-  }
-
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
+    if (showMenu) setShowMenu(false)
   }
 
+  const closeMenu = () => {
+    setMobileMenuOpen(false)
+  }
+
+  // Cerrar el menú móvil al cambiar de tamaño de pantalla
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -31,142 +42,137 @@ export const NavBar = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Cerrar el menú móvil al hacer clic en un enlace
+  const handleNavLinkClick = () => {
+    setMobileMenuOpen(false)
+  }
+
   const logoutAndRedirect = async () => {
     await handleLogout()
     setShowMenu(false)
-    setMobileMenuOpen(false)
     navigate('/login')
   }
 
   return (
-    <nav className="shadow-sm shadow-slate-400 p-3 bg-black-bg w-full">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl md:text-3xl text-white-headline">
-          ContactEase
-        </h1>
+    <>
+      {/* Mobile menu button */}
+      <button
+        onClick={toggleMobileMenu}
+        className="md:hidden fixed top-4 left-4 z-[1000] p-2 rounded-lg bg-white shadow-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 border border-gray-200"
+        aria-label="Menú"
+      >
+        <FontAwesomeIcon icon={mobileMenuOpen ? faXmark : faBars} className="text-lg" />
+      </button>
 
-        <button
-          className="md:hidden text-white p-2"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-        >
-          <FontAwesomeIcon
-            icon={mobileMenuOpen ? faXmark : faBars}
-            className="w-6 h-6"
-          />
-        </button>
+      {/* Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-40 z-[999] transition-opacity duration-300"
+          onClick={closeMenu}
+        ></div>
+      )}
 
-        {/* Desktop navigation */}
-        <ul className="hidden md:flex gap-4 items-center">
+      {/* Navigation bar */}
+      <nav
+        className={`h-screen w-[280px] bg-white fixed left-0 top-0 flex flex-col shadow-2xl border-r border-gray-200 z-[1001] transition-transform duration-300 ease-in-out transform ${
+          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
+        <div className="p-4 md:p-6 border-b border-gray-200 flex justify-between items-center">
+          <h1 className="text-xl font-bold text-gray-800 tracking-tight">
+            ContactChat
+          </h1>
+          <button
+            onClick={closeMenu}
+            className="md:hidden text-gray-500 hover:text-gray-700 transition-colors duration-200"
+            aria-label="Cerrar menú"
+          >
+            <FontAwesomeIcon icon={faXmark} className="text-lg" />
+          </button>
+        </div>
+
+        <div className="flex-1 flex flex-col py-4 md:py-6 overflow-y-auto gap-1">
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 md:px-6 py-3 text-base rounded-lg transition-colors duration-200 ${
+                isActive ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-gray-700 hover:bg-gray-100'
+              }`
+            }
+            onClick={handleNavLinkClick}
+          >
+            <FontAwesomeIcon icon={faHome} className="w-5 h-5 mr-1.5" />
+            <span>Dashboard</span>
+          </NavLink>
+
           <NavLink
             to="/contacts"
             className={({ isActive }) =>
-              `transition-all hover:text-orange-400 cursor-pointer text-lg ${
-                isActive ? 'text-orange-400' : 'text-white'
+              `flex items-center gap-3 px-4 md:px-6 py-3 text-base rounded-lg transition-colors duration-200 ${
+                isActive ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-gray-700 hover:bg-gray-100'
               }`
             }
+            onClick={handleNavLinkClick}
           >
-            Contact list
+            <FontAwesomeIcon icon={faAddressBook} className="w-5 h-5 mr-1.5" />
+            <span>Contactos</span>
           </NavLink>
+
           <NavLink
             to="/chat"
             className={({ isActive }) =>
-              `relative transition-all hover:text-orange-400 cursor-pointer text-lg ${
-                isActive ? 'text-orange-400' : 'text-white'
+              `relative flex items-center gap-3 px-4 md:px-6 py-3 text-base rounded-lg transition-colors duration-200 ${
+                isActive ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-gray-700 hover:bg-gray-100'
               }`
             }
+            onClick={handleNavLinkClick}
           >
-            Chat
+            <FontAwesomeIcon icon={faComments} className="w-5 h-5 mr-1.5" />
+            <span>Chat</span>
             {chats.some((chat) => chat.hasNotification) && (
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-3 left-4 w-2 h-2 bg-red-500 rounded-full"></span>
             )}
           </NavLink>
+        </div>
 
-          <div className="relative">
-            <div className='flex gap-2 items-center'>
-              <p className="text-white">
-                {user?.username}
-              </p>
-              <FontAwesomeIcon
-                icon={faUserCircle}
-                className="w-8 h-8 text-white cursor-pointer"
-                onClick={toggleMenu}
-              />
-            </div>
-
-            {showMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
-                <button
-                  onClick={logoutAndRedirect}
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
-                >
-                  Logout
-                </button>
-                <button
-                  onClick={handleDeleteUser}
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
-                >
-                  Delete Account
-                </button>
-              </div>
-            )}
-          </div>
-        </ul>
-      </div>
-
-      {mobileMenuOpen && (
-        <div className="md:hidden mt-4 bg-gray-900 rounded-lg p-4 animate-fadeIn">
-          <ul className="flex flex-col gap-4">
-            <NavLink
-              to="/contacts"
-              className={({ isActive }) =>
-                `transition-all hover:text-orange-400 cursor-pointer text-lg ${
-                  isActive ? 'text-orange-400' : 'text-white'
-                }`
-              }
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Contact list
-            </NavLink>
-            <NavLink
-              to="/chat"
-              className={({ isActive }) =>
-                `relative transition-all hover:text-orange-400 cursor-pointer text-lg ${
-                  isActive ? 'text-orange-400' : 'text-white'
-                }`
-              }
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Chat
-              {chats.some((chat) => chat.hasNotification) && (
-                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-              )}
-            </NavLink>
-
-            <div className="border-t border-gray-700 pt-3 mt-2">
-              <div className="flex justify-between items-center">
-                <p className="text-white">
+        {user && (
+          <div className="p-4 border-t border-gray-200">
+            <div className="relative">
+              <div
+                className="flex items-center px-2 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                onClick={() => setShowMenu(!showMenu)}
+              >
+                <FontAwesomeIcon
+                  icon={faUserCircle}
+                  className="w-6 h-6 text-gray-600 mr-2"
+                />
+                <span className="text-gray-700 font-medium truncate">
                   {user?.username}
-                </p>
-                <div className="flex gap-2">
+                </span>
+              </div>
+
+              {showMenu && (
+                <div className="absolute bottom-full left-0 mb-1 w-full bg-white rounded-md shadow-lg py-1 z-[1010] border border-gray-100">
                   <button
                     onClick={logoutAndRedirect}
-                    className="px-3 py-1 text-white bg-gray-700 rounded hover:bg-gray-600"
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left transition-colors duration-200"
                   >
+                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
                     Logout
                   </button>
                   <button
                     onClick={handleDeleteUser}
-                    className="px-3 py-1 text-white bg-red-700 rounded hover:bg-red-600"
+                    className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left transition-colors duration-200"
                   >
-                    Delete
+                    <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
+                    Delete Account
                   </button>
                 </div>
-              </div>
+              )}
             </div>
-          </ul>
-        </div>
-      )}
-    </nav>
+          </div>
+        )}
+      </nav>
+    </>
   )
 }
