@@ -10,27 +10,19 @@ import {
   faHome,
   faAddressBook,
   faComments,
-  faBars,
   faXmark
 } from '@fortawesome/free-solid-svg-icons'
+import PropTypes from 'prop-types'
 
-export const NavBar = () => {
+export const NavBar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
   const { user, handleLogout, handleDeleteUser } = useContext(AuthContext)
   const { chats } = useChat()
   const [showMenu, setShowMenu] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen)
-    if (showMenu) setShowMenu(false)
-  }
 
   const closeMenu = () => {
     setMobileMenuOpen(false)
   }
-
-  // Cerrar el menú móvil al cambiar de tamaño de pantalla
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -40,45 +32,26 @@ export const NavBar = () => {
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [setMobileMenuOpen])
 
-  // Cerrar el menú móvil al hacer clic en un enlace
   const handleNavLinkClick = () => {
     setMobileMenuOpen(false)
   }
 
-  const logoutAndRedirect = async () => {
-    await handleLogout()
-    setShowMenu(false)
-    navigate('/login')
-  }
-
   return (
     <>
-      {/* Mobile menu button */}
-      <button
-        onClick={toggleMobileMenu}
-        className="md:hidden fixed top-4 left-4 z-[1000] p-2 rounded-lg bg-white shadow-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 border border-gray-200"
-        aria-label="Menú"
-      >
-        <FontAwesomeIcon icon={mobileMenuOpen ? faXmark : faBars} className="text-lg" />
-      </button>
-
-      {/* Overlay */}
       {mobileMenuOpen && (
         <div
           className="md:hidden fixed inset-0 bg-black bg-opacity-40 z-[999] transition-opacity duration-300"
           onClick={closeMenu}
         ></div>
       )}
-
-      {/* Navigation bar */}
       <nav
         className={`h-screen w-[280px] bg-white fixed left-0 top-0 flex flex-col shadow-2xl border-r border-gray-200 z-[1001] transition-transform duration-300 ease-in-out transform ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        <div className="p-4 md:p-6 border-b border-gray-200 flex justify-between items-center">
+        <div className="p-4 md:h-16 border-b border-gray-200 flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-800 tracking-tight">
             ContactChat
           </h1>
@@ -134,45 +107,12 @@ export const NavBar = () => {
             )}
           </NavLink>
         </div>
-
-        {user && (
-          <div className="p-4 border-t border-gray-200">
-            <div className="relative">
-              <div
-                className="flex items-center px-2 py-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors duration-200"
-                onClick={() => setShowMenu(!showMenu)}
-              >
-                <FontAwesomeIcon
-                  icon={faUserCircle}
-                  className="w-6 h-6 text-gray-600 mr-2"
-                />
-                <span className="text-gray-700 font-medium truncate">
-                  {user?.username}
-                </span>
-              </div>
-
-              {showMenu && (
-                <div className="absolute bottom-full left-0 mb-1 w-full bg-white rounded-md shadow-lg py-1 z-[1010] border border-gray-100">
-                  <button
-                    onClick={logoutAndRedirect}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left transition-colors duration-200"
-                  >
-                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
-                    Logout
-                  </button>
-                  <button
-                    onClick={handleDeleteUser}
-                    className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left transition-colors duration-200"
-                  >
-                    <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-                    Delete Account
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </nav>
     </>
   )
+}
+
+NavBar.propTypes = {
+  mobileMenuOpen: PropTypes.bool.isRequired,
+  setMobileMenuOpen: PropTypes.func.isRequired
 }
