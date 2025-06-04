@@ -38,6 +38,7 @@ export const NavBar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
     setMobileMenuOpen(false)
   }
 
+
   return (
     <>
       {mobileMenuOpen && (

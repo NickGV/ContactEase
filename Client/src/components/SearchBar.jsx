@@ -9,13 +9,12 @@ export const SearchBar = () => {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value)
   }
-
   return (
     <div className="w-full md:px-4">
       <div className="relative">
         <input
           type="text"
-          placeholder="Search contacts"
+          placeholder="Buscar contactos"
           onChange={handleSearchChange}
           value={searchTerm}
           className="w-full bg-transparent rounded-md border border-stroke dark:border-dark-3 py-2.5 px-4 text-dark-6 outline-none transition focus:border-white ring-white ring-1 focus:ring-orange-400"

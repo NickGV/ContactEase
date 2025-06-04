@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { Message } from './Message'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperPlane, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
 import useChat from '../hooks/useChat'
-import { getContactById } from '../services/contactService'
 import { getUserById } from '../services/authService'
 
 export const ChatWindow = () => {
@@ -61,47 +60,54 @@ export const ChatWindow = () => {
       }
     }
   }
+  
   useEffect(() => {
     getContactName()
   }, [selectedChat])
 
   return (
-    <div className="bg-black-bg flex flex-col w-full h-full shadow-lg rounded-lg p-4">
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center">
-          <button
-            onClick={handleCloseChat}
-            className="mr-3 text-white-btn-text bg-orange-btn hover:bg-orange-500 rounded-full h-8 w-8 flex items-center justify-center shadow-lg"
-          >
-            <FontAwesomeIcon icon={faArrowLeft} className="text-sm" />
-          </button>
-          <h2 className="text-lg font-bold truncate flex-1">
-            {contact?.username || 'Chat'}
-          </h2>
+    <div className="flex flex-col h-full">
+      <div className="border-b border-gray-200 p-4 flex items-center">
+        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white mr-3">
+          <FontAwesomeIcon icon={faUser} />
         </div>
+        <h2 className="text-lg font-medium">
+          {contact?.username || 'Chat'}
+        </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto mb-4 scrollbar-thin">
-        {messages.map((message, index) => (
-          <Message key={index} message={message} />
-        ))}
+      <div className="flex-1 overflow-y-auto p-4 scrollbar-thin">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-gray-400">
+            <p>No hay mensajes aún</p>
+            <p className="text-sm">Envía un mensaje para iniciar la conversación</p>
+          </div>
+        ) : (
+          messages.map((message, index) => (
+            <Message key={index} message={message} />
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
-      <div className="flex">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-4/5 md:w-full flex-1 rounded-lg px-4 py-2 mr-2 bg-gray-700 outline-none text-white hover:bg-gray-600 transition-colors duration-300"
-          placeholder="Type a message..."
-        />
-        <button
-          onClick={handleSendMessage}
-          className="bg-gray-700 text-white rounded px-4 py-2 hover:bg-gray-600 transition-colors duration-300"
-        >
-          <FontAwesomeIcon icon={faPaperPlane} />
-        </button>
+
+      <div className="border-t border-gray-200 p-3">
+        <div className="flex items-center bg-gray-50 rounded-full px-4 py-2">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-400"
+            placeholder="Escribe un mensaje..."
+          />
+          <button
+            onClick={handleSendMessage}
+            className="ml-2 text-primary hover:text-primary-dark transition-colors"
+            disabled={!newMessage.trim()}
+          >
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </button>
+        </div>
       </div>
     </div>
   )

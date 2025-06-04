@@ -21,8 +21,8 @@ export const ContactList = ({ toggleAddContactForm }) => {
   })
 
   return (
-    <div className='m-w-full w-11/12 md:m-4 overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0'>
-                  <div className="relative mb-4">
+    <div className='m-w-full overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0'>
+                  <div className="relative mb-4 m-4">
         <button
           className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 font-medium transition-colors"
           onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -85,8 +85,8 @@ export const ContactList = ({ toggleAddContactForm }) => {
           )
         : filteredContacts && filteredContacts.length > 0
           ? (
-        <div className="flex md:flex-col align-items-center">
-          <h2 className="hidden md:block mb-3 text-xl text-white-headline font-bold p-2">
+        <div className="flex md:flex-col align-items-center w-full">
+          <h2 className="hidden md:block mb-3 ml-4 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
           <div className="md:hidden flex flex-col items-center justify-center">
@@ -102,9 +102,9 @@ export const ContactList = ({ toggleAddContactForm }) => {
               Add contact
             </span>
           </div>
-          <ul className={`m-w-full flex md:grid ${selectedContact ? 'md:grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4`}>
+          <ul className={'m-w-full flex gap-4'}>
             {filteredContacts.map((contact) => (
-              <li className="md:border-b" key={contact._id}>
+              <li className="md:border-b border-gray-200 w-full" key={contact._id}>
                 <ContactItem
                   _id={contact._id}
                   name={contact.name}
