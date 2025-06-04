@@ -122,6 +122,7 @@ export const ChatProvider = ({ children }) => {
       }
     }
 
+    if (!socket || !isConnected) return
     fetchChats()
   }, [chats])
 
