@@ -1,5 +1,5 @@
-import { ChatSidebar } from '../components/ChatSidebar'
-import { ChatWindow } from '../components/ChatWindow'
+import { ChatSidebar } from '../components/chat/ChatSidebar'
+import { ChatWindow } from '../components/chat/ChatWindow'
 import useChat from '../hooks/useChat'
 
 export const ChatPage = () => {

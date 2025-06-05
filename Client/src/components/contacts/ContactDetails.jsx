@@ -9,7 +9,7 @@ import {
   faPhone
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons'
-import useContacts from '../hooks/useContacts'
+import useContacts from '../../hooks/useContacts'
 
 export const ContactDetails = () => {
   const [hoveredButton, setHoveredButton] = useState(null)

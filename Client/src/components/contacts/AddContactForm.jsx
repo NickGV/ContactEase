@@ -1,7 +1,7 @@
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useFormValidation from '../hooks/useForm'
-import useContacts from '../hooks/useContacts'
+import useFormValidation from '../../hooks/useForm'
+import useContacts from '../../hooks/useContacts'
 
 export const AddContactForm = ({ showForm, onClose }) => {
   const { addNewContact } = useContacts()
@@ -47,8 +47,8 @@ export const AddContactForm = ({ showForm, onClose }) => {
   return (
     <>
       {showForm && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black-bg bg-opacity-80">
-          <div className="max-w-md w-full bg-black-bg shadow-sm shadow-white rounded-lg p-6 relative">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-content-bg bg-opacity-80">
+          <div className="max-w-md w-full bg-white shadow-sm shadow-white rounded-lg p-6 relative">
             <form
               onSubmit={handleSubmit}
               className="max-w-md mx-auto p-3 relative"
@@ -60,7 +60,7 @@ export const AddContactForm = ({ showForm, onClose }) => {
                   id="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                  className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-text-primary dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
                     errors.name ? 'border-red-500' : ''
                   }`}
                   placeholder=" "
@@ -84,7 +84,7 @@ export const AddContactForm = ({ showForm, onClose }) => {
                   id="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
+                  className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-text-primary  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer ${
                     errors.name ? 'border-red-500' : ''
                   }`}
                   placeholder=" "
@@ -107,7 +107,7 @@ export const AddContactForm = ({ showForm, onClose }) => {
                   id="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer${
+                  className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-text-primary  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer${
                     errors.name ? 'border-red-500' : ''
                   }`}
                   placeholder=" "
@@ -138,15 +138,16 @@ export const AddContactForm = ({ showForm, onClose }) => {
                   value={formData.notes}
                   onChange={handleChange}
                   rows="4"
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-content-bg dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Leave a note..."
                 ></textarea>
               </div>
               <button
                 type="submit"
-                className="text-white-btn-text bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-orange-400 dark:hover:bg-orange-500 border "
+                className="text-white-btn-text bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center text-white dark:bg-blue-700 dark:hover:bg-blue-800 border "
               >
-                Submit
+                <FontAwesomeIcon icon={faPlus} />
+                Add new contact
               </button>
             </form>
             <button

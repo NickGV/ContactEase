@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { ContactItem } from './ContactItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import useContacts from '../hooks/useContacts'
+import useContacts from '../../hooks/useContacts'
 
 export const ContactList = ({ toggleAddContactForm }) => {
-  const { contacts, searchResultsFound, searchTerm, setSearchTerm, selectedContact } = useContacts()
+  const { contacts, searchResultsFound, searchTerm, setSearchTerm } = useContacts()
   const [filter, setFilter] = useState('all')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
@@ -89,20 +89,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           <h2 className="hidden md:block mb-3 ml-4 text-xl text-white-headline font-bold p-2">
             Contact List
           </h2>
-          <div className="md:hidden flex flex-col items-center justify-center">
-            <button
-              type="button"
-              className="flex items-center justify-center text-white-btn-text bg-orange-btn hover:bg-orange-500 rounded-full h-16 w-16 shadow-lg transition-all hover:scale-105 active:scale-95"
-              onClick={toggleAddContactForm}
-              aria-label="Add new contact"
-            >
-              <FontAwesomeIcon icon={faUserPlus} className="text-3xl" />
-            </button>
-            <span className="mt-1 text-sm text-slate-700">
-              Add contact
-            </span>
-          </div>
-          <ul className={'m-w-full flex gap-4'}>
+          <ul className={'m-w-full w-full flex flex-col'}>
             {filteredContacts.map((contact) => (
               <li className="md:border-b border-gray-200 w-full" key={contact._id}>
                 <ContactItem
@@ -125,7 +112,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           </h1>
           <button
             type="button"
-            className="py-3 px-5 text-sm font-medium text-white-btn-text focus:outline-none bg-orange-btn rounded-lg border border-gray-200 hover:bg-orange-500 focus:ring-4 focus:ring-gray-100 transition-all hover:scale-95"
+            className="py-3 px-5 text-sm font-medium text-white-btn-text focus:outline-none bg-orange-btn rounded-lg border border-gray-200 hover:bg-primary-light hover:text-white focus:ring-4 focus:ring-gray-100 transition-all hover:scale-95"
             onClick={toggleAddContactForm}
           >
             <FontAwesomeIcon icon={faUserPlus} className="mr-2" />

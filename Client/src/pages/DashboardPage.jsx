@@ -3,8 +3,8 @@ import { ContactsContext } from '../context/ContactsContext'
 import useChat from '../hooks/useChat'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPlus, faComments } from '@fortawesome/free-solid-svg-icons'
-import { AddContactForm } from '../components/AddContactForm'
-import { ContactChatSelector } from '../components/ContactChatSelector'
+import { AddContactForm } from '../components/contacts/AddContactForm'
+import { ContactChatSelector } from '../components/chat/ContactChatSelector'
 
 export const DashboardPage = () => {
   const { contacts } = useContext(ContactsContext)

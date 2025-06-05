@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ContactsContext } from '../context/ContactsContext'
+import { ContactsContext } from '../../context/ContactsContext'
 import { faArrowLeft, faUser, faUserPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useState } from 'react'
-import { SearchBar } from './SearchBar'
-import useChat from '../hooks/useChat'
-import { InvitePopup } from './InvitePopup'
+import { SearchBar } from '../ui/SearchBar'
+import useChat from '../../hooks/useChat'
+import { InvitePopup } from '../layout/InvitePopup'
 import { ContactChatSelector } from './ContactChatSelector'
 
 export const ChatSidebar = () => {

@@ -1,12 +1,11 @@
-import { ContactList } from '../components/ContactList'
-import { ContactDetails } from '../components/ContactDetails'
-import { EditContactForm } from '../components/EditContactForm'
-import { AddContactForm } from '../components/AddContactForm'
-import { Header } from '../components/Header'
+import { ContactList } from '../components/contacts/ContactList'
+import { ContactDetails } from '../components/contacts/ContactDetails'
+import { EditContactForm } from '../components/contacts/EditContactForm'
+import { AddContactForm } from '../components/contacts/AddContactForm'
 import useContacts from '../hooks/useContacts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { SearchBar } from '../components/SearchBar'
+import { SearchBar } from '../components/ui/SearchBar'
 
 export const ContactPage = ({ toggleAddContactForm, showForm }) => {
   const { editingContact, selectedContact } = useContacts()
@@ -16,7 +15,7 @@ export const ContactPage = ({ toggleAddContactForm, showForm }) => {
         <h1 className="text-2xl font-bold text-gray-800">Contactos</h1>
         <button
           onClick={toggleAddContactForm}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors"
         >
           <FontAwesomeIcon icon={faPlus} /> Añadir Contacto
         </button>

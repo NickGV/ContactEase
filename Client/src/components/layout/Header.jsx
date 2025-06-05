@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faUserCircle, faSignOutAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useState } from 'react'
-import { AuthContext } from '../context/AuthContext'
+import { AuthContext } from '../../context/AuthContext'
 import PropTypes from 'prop-types'
 import { NavBar } from './NavBar'
 

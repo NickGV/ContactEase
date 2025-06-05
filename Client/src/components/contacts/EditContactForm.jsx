@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
-import useFormValidation from '../hooks/useForm'
-import useContacts from '../hooks/useContacts'
+import useFormValidation from '../../hooks/useForm'
+import useContacts from '../../hooks/useContacts'
 import { useEffect } from 'react'
 
 export const EditContactForm = () => {
@@ -63,7 +63,7 @@ export const EditContactForm = () => {
   }, [editingContact, setFormData])
 
   return (
-    <div className="w-full h-full mx-auto p-2 sm:p-3 md:p-4 lg:p-5 shadow-md shadow-slate-400 rounded-md flex flex-col bg-black-bg flex-1">
+    <div className="w-full h-full mx-auto p-2 sm:p-3 md:p-4 lg:p-5 shadow-md shadow-slate-400 rounded-md flex flex-col bg-content-bg flex-1">
       {!editingContact
         ? (
         <div className="text-center text-lg sm:text-xl md:text-2xl flex items-center justify-center h-full">No contact selected</div>

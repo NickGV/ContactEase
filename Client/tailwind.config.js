@@ -23,7 +23,7 @@ export default {
         secondary: "#1a1a1a",
         "sidebar-bg": "#1a1a1a",
         "content-bg": "#242424",
-        "text-primary": "#ffffff",
+        "text-primary": "#1a1a1a",
         "text-secondary": "#a0a0a0",
         accent: "#3b55d9",
         danger: "#dc2626",

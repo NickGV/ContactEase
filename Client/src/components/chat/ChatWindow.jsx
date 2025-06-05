@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { Message } from './Message'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
-import useChat from '../hooks/useChat'
-import { getUserById } from '../services/authService'
+import useChat from '../../hooks/useChat'
+import { getUserById } from '../../services/authService'
 
 export const ChatWindow = () => {
   const [newMessage, setNewMessage] = useState('')

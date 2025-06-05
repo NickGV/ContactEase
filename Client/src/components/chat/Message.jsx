@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getUser } from '../services/authService'
-import useAuth from '../hooks/useAuth'
+import { getUser } from '../../services/authService'
+import useAuth from '../../hooks/useAuth'
 
 export const Message = ({ message }) => {
   const [senderName, setSenderName] = useState('')
