@@ -6,16 +6,18 @@ import useContacts from '../hooks/useContacts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { SearchBar } from '../components/ui/SearchBar'
+import PropTypes from 'prop-types'
 
 export const ContactPage = ({ toggleAddContactForm, showForm }) => {
   const { editingContact, selectedContact } = useContacts()
+
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto relative z-0">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Contactos</h1>
         <button
           onClick={toggleAddContactForm}
-          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors"
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors flex items-center gap-2"
         >
           <FontAwesomeIcon icon={faPlus} /> Añadir Contacto
         </button>
@@ -46,4 +48,9 @@ export const ContactPage = ({ toggleAddContactForm, showForm }) => {
       <AddContactForm showForm={showForm} onClose={toggleAddContactForm} />
     </div>
   )
+}
+
+ContactPage.propTypes = {
+  toggleAddContactForm: PropTypes.func.isRequired,
+  showForm: PropTypes.bool.isRequired
 }

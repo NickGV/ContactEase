@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons'
 import useContacts from '../../hooks/useContacts'
+import PropTypes from 'prop-types'
 
 export const ContactItem = ({
   _id,
@@ -135,4 +136,13 @@ export const ContactItem = ({
       </div>
     </div>
   )
+}
+
+ContactItem.propTypes = {
+  _id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string,
+  phoneNumber: PropTypes.string.isRequired,
+  notes: PropTypes.string,
+  isFavorite: PropTypes.bool
 }

@@ -3,6 +3,7 @@ import { ContactItem } from './ContactItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import useContacts from '../../hooks/useContacts'
+import PropTypes from 'prop-types'
 
 export const ContactList = ({ toggleAddContactForm }) => {
   const { contacts, searchResultsFound, searchTerm, setSearchTerm } = useContacts()
@@ -122,4 +123,8 @@ export const ContactList = ({ toggleAddContactForm }) => {
             )}
     </div>
   )
+}
+
+ContactList.propTypes = {
+  toggleAddContactForm: PropTypes.func.isRequired
 }
