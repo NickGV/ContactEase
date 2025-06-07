@@ -12,7 +12,7 @@ export const ContactPage = ({ toggleAddContactForm, showForm }) => {
   const { editingContact, selectedContact } = useContacts()
 
   return (
-    <div className="container mx-auto relative z-0">
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Contactos</h1>
         <button

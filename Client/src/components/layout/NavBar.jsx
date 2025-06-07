@@ -4,9 +4,7 @@ import { AuthContext } from '../../context/AuthContext'
 import useChat from '../../hooks/useChat'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faUserCircle,
-  faSignOutAlt,
-  faTrashAlt,
+
   faHome,
   faAddressBook,
   faComments,
@@ -15,10 +13,7 @@ import {
 import PropTypes from 'prop-types'
 
 export const NavBar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
-  const { user, handleLogout, handleDeleteUser } = useContext(AuthContext)
   const { chats } = useChat()
-  const [showMenu, setShowMenu] = useState(false)
-  const navigate = useNavigate()
 
   const closeMenu = () => {
     setMobileMenuOpen(false)

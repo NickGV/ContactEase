@@ -1,12 +1,16 @@
+import { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEnvelope,
+  faPhone,
+  faXmark,
+  faSave
+} from '@fortawesome/free-solid-svg-icons'
 import useFormValidation from '../../hooks/useForm'
 import useContacts from '../../hooks/useContacts'
-import { useEffect } from 'react'
-import PropTypes from 'prop-types'
 
-export const EditContactForm = ({ onClose }) => {
-  const { editingContact, editContact } = useContacts()
+export const EditContactForm = () => {
+  const { editingContact, editContact, resetSelectedContact } = useContacts()
 
   const INITIAL_STATE = {
     name: editingContact?.name || '',
@@ -19,17 +23,17 @@ export const EditContactForm = ({ onClose }) => {
     const errors = {}
 
     if (!values.name) {
-      errors.name = 'The name is required'
+      errors.name = 'El nombre es requerido'
     }
 
     if (!values.email) {
-      errors.email = 'Email is required'
+      errors.email = 'El email es requerido'
     } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = 'The email is not valid'
+      errors.email = 'El email no es válido'
     }
 
     if (!values.phoneNumber) {
-      errors.phoneNumber = 'Phone number is required'
+      errors.phoneNumber = 'El número de teléfono es requerido'
     }
 
     return errors
@@ -46,7 +50,6 @@ export const EditContactForm = ({ onClose }) => {
     }
 
     editContact(editedContact)
-    onClose()
   }
 
   const { formData, errors, handleChange, handleSubmit, setFormData } = useFormValidation(
@@ -69,93 +72,109 @@ export const EditContactForm = ({ onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex gap-2 sm:gap-3 items-center">
-              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-                <FontAwesomeIcon icon={faUser} />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+        <form onSubmit={handleSubmit} className="p-6">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+            <div className="flex flex-col m-auto items-center">
+              <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-white text-4xl font-bold mb-2">
+                {formData.name ? formData.name.charAt(0) : ''}
               </div>
-              <div className="flex flex-col flex-1">
+              <div className="relative w-full">
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`font-bold text-base sm:text-lg md:text-2xl mb-1 bg-transparent border-b border-gray-500 w-full ${
-                    errors.name ? 'border border-red-500' : ''
-                  } outline-none focus:border-blue-500 px-1 py-0.5`}
-                  placeholder="Name"
+                  className={`text-xl font-bold text-center w-full bg-transparent border-b ${
+                    errors.name ? 'border-red-500' : 'border-gray-300'
+                  } focus:border-primary-light focus:outline-none px-2 py-1`}
+                  placeholder="Nombre"
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-xs sm:text-sm">{errors.name}</p>
+                  <p className="absolute text-xs text-red-500 text-center w-full mt-1">{errors.name}</p>
                 )}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 mb-6">
+            <div className="flex items-start p-3 bg-gray-50 rounded-lg">
+              <FontAwesomeIcon icon={faPhone} className="text-primary mr-3 mt-5" />
+              <div className="w-full">
+                <p className="text-xs text-gray-500">Teléfono</p>
                 <input
-                  type="text"
+                  type="tel"
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className={`text-sm sm:text-base md:text-xl bg-transparent border-b border-gray-500 w-full ${
-                    errors.phoneNumber ? 'border border-red-500' : ''
-                  } outline-none focus:border-blue-500 px-1 py-0.5`}
-                  placeholder="Phone number"
+                  className={`font-medium w-full bg-transparent border-b ${
+                    errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
+                  } focus:border-primary-light focus:outline-none px-0 py-1`}
+                  placeholder="Número de teléfono"
                 />
                 {errors.phoneNumber && (
-                  <p className="text-red-500 text-xs sm:text-sm">{errors.phoneNumber}</p>
+                  <p className="text-xs text-red-500 mt-1">{errors.phoneNumber}</p>
                 )}
+              </div>
+            </div>
+
+            <div className="flex items-start p-3 bg-gray-50 rounded-lg">
+              <FontAwesomeIcon
+                icon={faEnvelope}
+                className="text-primary mr-3 mt-5"
+              />
+              <div className="w-full">
+                <p className="text-xs text-gray-500">Email</p>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`text-link underline text-sm sm:text-base md:text-xl bg-transparent border-b border-gray-500 w-full ${
-                    errors.email ? 'border border-red-500' : ''
-                  } outline-none focus:border-blue-500 px-1 py-0.5`}
-                  placeholder="Email"
+                  className={`font-medium text-primary w-full bg-transparent border-b ${
+                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  } focus:border-primary-light focus:outline-none px-0 py-1`}
+                  placeholder="Correo electrónico"
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-xs sm:text-sm">{errors.email}</p>
+                  <p className="text-xs text-red-500 mt-1">{errors.email}</p>
                 )}
               </div>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full"
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
           </div>
 
-          <h2 className="text-gray-700 font-bold text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3">
-            Additional Notes
-          </h2>
-          <div className="overflow-y-auto flex-grow mb-4 sm:mb-6 md:mb-8 lg:mb-10 border rounded-sm p-2 sm:p-3 md:p-4">
-            <textarea
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              className="overflow-y-auto w-full h-full min-h-[100px] bg-transparent border-b border-gray-500 outline-none focus:border-blue-500 resize-none p-1"
-              placeholder="Add notes here..."
-            />
-          </div>
-          <div className="mt-auto">
-            <div className="flex justify-end space-x-2 gap-2 sm:gap-3 md:gap-4">
-              <button
-                type="submit"
-                onClick={handleSubmit}
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-xs sm:text-sm w-full sm:w-auto px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 text-center dark:bg-orange-400 dark:hover:bg-orange-500 border transition-all hover:scale-95"
-              >
-                Save Changes
-              </button>
+          <div className="flex-grow border-b border-gray-200 mb-4">
+            <h3 className="font-medium text-gray-700 mb-2">Notas</h3>
+            <div className="bg-gray-50 rounded-lg p-4 h-48">
+              <textarea
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                className="w-full h-full bg-transparent resize-none focus:outline-none"
+                placeholder="No hay notas para este contacto"
+              ></textarea>
             </div>
           </div>
-        </div>
+
+          <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg shadow hover:bg-primary-light transition font-medium text-base justify-center"
+            >
+              <FontAwesomeIcon icon={faSave} />
+              Guardar Cambios
+            </button>
+          </div>
+        </form>
+
+        <button
+          onClick={resetSelectedContact}
+          type="button"
+          className="flex justify-center items-center p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full absolute top-0 right-0 text-lg"
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
       </div>
     </div>
   )
-}
-
-EditContactForm.propTypes = {
-  onClose: PropTypes.func.isRequired
 }

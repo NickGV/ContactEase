@@ -8,7 +8,6 @@ import PropTypes from 'prop-types'
 export const ContactList = ({ toggleAddContactForm }) => {
   const { contacts, searchResultsFound, searchTerm, setSearchTerm } = useContacts()
   const [filter, setFilter] = useState('all')
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const filteredContacts = contacts.filter(contact => {
     if (filter === 'favorites') {
@@ -23,50 +22,37 @@ export const ContactList = ({ toggleAddContactForm }) => {
 
   return (
     <div className='m-w-full overflow-x-auto md:overflow-y-auto pt-1 px-2 md:p-0'>
-                  <div className="relative mb-4 m-4">
+      <div className="mb-4 m-4 flex gap-2">
         <button
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800 font-medium transition-colors"
-          onClick={() => setIsFilterOpen(!isFilterOpen)}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            filter === 'all'
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+          }`}
+          onClick={() => setFilter('all')}
         >
-          Filters
-          <svg className={`w-4 h-4 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
+          Todos
         </button>
-
-        {isFilterOpen && (
-          <div className="absolute top-full left-0 mt-1 w-48 bg-gray-300 rounded-md shadow-lg z-10 text-black">
-            <div className="py-1">
-              <button
-                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${filter === 'all' ? 'bg-gray-100 font-medium' : ''}`}
-                onClick={() => {
-                  setFilter('all')
-                  setIsFilterOpen(false)
-                }}
-              >
-                All
-              </button>
-              <button
-                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${filter === 'favorites' ? 'bg-gray-100 font-medium' : ''}`}
-                onClick={() => {
-                  setFilter('favorites')
-                  setIsFilterOpen(false)
-                }}
-              >
-                Favorites
-              </button>
-              <button
-                className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${filter === 'recent' ? 'bg-gray-100 font-medium' : ''}`}
-                onClick={() => {
-                  setFilter('recent')
-                  setIsFilterOpen(false)
-                }}
-              >
-                Recently Added
-              </button>
-            </div>
-          </div>
-        )}
+        <button
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            filter === 'favorites'
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+          }`}
+          onClick={() => setFilter('favorites')}
+        >
+          Favoritos
+        </button>
+        <button
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            filter === 'recent'
+              ? 'bg-primary text-white'
+              : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+          }`}
+          onClick={() => setFilter('recent')}
+        >
+          Recientes
+        </button>
       </div>
       {!searchResultsFound
         ? (
