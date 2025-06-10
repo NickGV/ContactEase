@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faUserCircle, faSignOutAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faUserCircle, faSignOutAlt, faTrashAlt, faUser } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 import PropTypes from 'prop-types'
 import { NavBar } from './NavBar'
+import { Link } from 'react-router-dom'
 
 export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
   const { user, handleLogout, handleDeleteUser } = useContext(AuthContext)
@@ -35,6 +36,13 @@ export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
         </button>
         {showMenu && (
           <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-[1200] border border-gray-100">
+            <Link
+              to='/account'
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left transition-colors duration-200"
+            >
+              <FontAwesomeIcon icon={faUser} className="mr-2" />
+              Account
+            </Link>
             <button
               onClick={logoutAndRedirect}
               className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left transition-colors duration-200"

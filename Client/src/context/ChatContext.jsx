@@ -123,7 +123,7 @@ export const ChatProvider = ({ children }) => {
     }
 
     fetchChats()
-  }, [])
+  }, [chats])
 
   useEffect(() => {
     if (!socket || !isConnected) return
@@ -157,11 +157,16 @@ export const ChatProvider = ({ children }) => {
     try {
       const response = await getOrCreateChat(phoneNumber)
       if (response.chat) {
-        setChats((prevChats) =>
-          prevChats.map((chat) =>
-            chat._id === response.chat._id ? { ...chat, hasNotification: false } : chat
-          )
-        )
+        setChats((prevChats) => {
+          const exists = prevChats.some((chat) => chat._id === response.chat._id)
+          if (exists) {
+            return prevChats.map((chat) =>
+              chat._id === response.chat._id ? { ...chat, hasNotification: false } : chat
+            )
+          } else {
+            return [{ ...response.chat, hasNotification: false }, ...prevChats]
+          }
+        })
         setSelectedChat(response.chat)
         getChatMessages(response.chat._id)
         socket.emit('joinChat', { chatId: response.chat._id })
