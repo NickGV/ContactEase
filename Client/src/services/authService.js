@@ -29,6 +29,15 @@ export const login = async (email, password) => {
   }
 }
 
+export const update = async (username, email, phoneNumber, currentPassword, newPassword) => {
+  try {
+    const response = await axios.put(`${API_URL}/edit`, { username, email, phoneNumber, currentPassword, newPassword }, getAuthHeaders())
+    return response.data
+  } catch (error) {
+    throw error.response?.data?.message || 'An error occurred while editing the user'
+  }
+}
+
 export const logout = async () => {
   try {
     const response = await axios.get(`${API_URL}/logout`)

@@ -13,7 +13,6 @@ const configureSocket = (server) => {
     }
   });
 
-  // Mapeo de usuarios a chats activos (para saber quién está viendo qué chat)
   const activeViewers = new Map();
 
   io.use((socket, next) => {
@@ -38,13 +37,11 @@ const configureSocket = (server) => {
     socket.join(socket.user.id);
     console.log(`User ${socket.user.id} joined personal notification room`);
 
-    // Rastrear qué chat está viendo el usuario
     socket.on("viewingChat", ({ chatId }) => {
       console.log(`User ${socket.user.id} is now viewing chat ${chatId}`);
       activeViewers.set(socket.user.id, chatId);
     });
 
-    // Usuario dejó de ver un chat
     socket.on("leftChat", () => {
       console.log(`User ${socket.user.id} is no longer viewing any chat`);
       activeViewers.delete(socket.user.id);

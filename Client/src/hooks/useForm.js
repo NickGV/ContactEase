@@ -17,6 +17,7 @@ const useFormValidation = (initialState, validate, onSubmit) => {
         await onSubmit(formData)
         setFormData(initialState)
       } catch (err) {
+        setErrors(err)
         console.error(err)
       }
     }

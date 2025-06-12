@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react'
-import { login, register, logout, deleteUser, getUser } from '../services/authService'
+import { login, register, logout, deleteUser, getUser, update } from '../services/authService'
 import { toast } from 'sonner'
 
 export const AuthContext = createContext()
@@ -43,6 +43,17 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const handleUpdateUser = async (username, email, phoneNumber, currentPassword, newPassword) => {
+    try {
+      const response = await update(username, email, phoneNumber, currentPassword, newPassword)
+      setUser(response)
+      toast.success('User updated')
+    } catch (error) {
+      toast.error(error)
+      throw error
+    }
+  }
+
   const handleDeleteUser = async () => {
     try {
       const response = await deleteUser()
@@ -68,7 +79,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, handleRegister, handleLogin, handleLogout, handleDeleteUser }}>
+    <AuthContext.Provider value={{ user, handleRegister, handleLogin, handleUpdateUser, handleLogout, handleDeleteUser }}>
       {children}
     </AuthContext.Provider>
   )

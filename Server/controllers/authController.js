@@ -60,6 +60,45 @@ exports.login = async (req, res, next) => {
   }
 };
 
+exports.updateUser = async (req,res,next) => {
+  try {
+    const {username, email, phoneNumber, currentPassword, newPassword} = req.body
+
+    const user = await User.findById(req.user.id)
+
+    if(!user){
+      const error = new Error('User not found')
+      error.statusCode = 404
+      return next(error)
+    }
+
+    user.username = username || user.username
+    user.email = email || user.email
+    user.phoneNumber = phoneNumber || user.phoneNumber
+
+
+    if (currentPassword && newPassword) {
+      console.log('Updating password for user:', user._id);
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if(!isMatch){
+        const error = new Error('Current password is incorrect')
+        error.statusCode = 400
+        return next(error)
+      }
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    await user.save();
+
+    const userWithoutPassword = user.toObject ? user.toObject() : { ...user._doc };
+    delete userWithoutPassword.password;
+    res.json(userWithoutPassword);
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
 exports.deleteUser = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user.id);

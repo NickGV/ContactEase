@@ -11,6 +11,7 @@ import { ContactsProvider } from './context/ContactsContext'
 import { AuthProvider } from './context/AuthContext'
 import { ChatProvider } from './context/ChatContext'
 import useAuth from './hooks/useAuth'
+import { AccountPage } from './pages/AccountPage'
 
 function AppContent () {
   const [showForm, setShowForm] = useState(false)
@@ -43,6 +44,7 @@ function AppContent () {
                   }
                 />
                 <Route path="/chat" element={<ChatPage />} />
+                <Route path='/account' element={<AccountPage/>}/>
               </Route>
                 )
               : (
