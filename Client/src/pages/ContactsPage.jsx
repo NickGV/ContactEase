@@ -1,26 +1,56 @@
-import { ContactList } from '../components/ContactList'
-import { ContactDetails } from '../components/ContactDetails'
-import { EditContactForm } from '../components/EditContactForm'
-import { AddContactForm } from '../components/AddContactForm'
-import { Header } from '../components/Header'
+import { ContactList } from '../components/contacts/ContactList'
+import { ContactDetails } from '../components/contacts/ContactDetails'
+import { EditContactForm } from '../components/contacts/EditContactForm'
+import { AddContactForm } from '../components/contacts/AddContactForm'
 import useContacts from '../hooks/useContacts'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { SearchBar } from '../components/ui/SearchBar'
+import PropTypes from 'prop-types'
 
 export const ContactPage = ({ toggleAddContactForm, showForm }) => {
   const { editingContact, selectedContact } = useContacts()
+
   return (
-    <>
-     <Header toggleAddContactForm={toggleAddContactForm} />
-    <main className="flex flex-col md:flex-row h-4/6 md:gap-2 md:h-5/6 xl:h-87">
-      <div className={`w-full ${selectedContact ? 'md:w-1/3' : 'md:w-full'} h-36 md:h-95 lg:h-full md:flex justify-center`}>
-          <ContactList toggleAddContactForm={toggleAddContactForm} />
+    <div className="container mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Contactos</h1>
+        <button
+          onClick={toggleAddContactForm}
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors flex items-center gap-2"
+        >
+          <FontAwesomeIcon icon={faPlus} /> Añadir Contacto
+        </button>
       </div>
-      {selectedContact && (
-        <div className="w-full p-2 md:pd-2 mt-6 md:mt-6 md:w-2/3 h-5/6 md:h-95 flex flex-col flex-1 item-center ">
-          {editingContact ? <EditContactForm /> : <ContactDetails />}
+
+      <SearchBar />
+
+      <div className="bg-white rounded-lg shadow-md overflow-hidden mt-4">
+        <div className="flex flex-col md:flex-row h-[calc(100vh-12rem)]">
+          <div
+            className={`${
+              selectedContact
+                ? 'md:w-1/3 lg:w-1/3 border-r border-gray-200'
+                : 'w-full'
+            } overflow-y-auto`}
+          >
+            <ContactList toggleAddContactForm={toggleAddContactForm} />
+          </div>
+
+          {selectedContact && (
+            <div className="w-full md:w-2/3 lg:w-2/3 p-4 overflow-y-auto">
+              {editingContact ? <EditContactForm /> : <ContactDetails />}
+            </div>
+          )}
         </div>
-      )}
+      </div>
+
       <AddContactForm showForm={showForm} onClose={toggleAddContactForm} />
-    </main>
-    </>
+    </div>
   )
+}
+
+ContactPage.propTypes = {
+  toggleAddContactForm: PropTypes.func.isRequired,
+  showForm: PropTypes.bool.isRequired
 }
