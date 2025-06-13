@@ -28,7 +28,7 @@ export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
       <div className="relative">
         <button
           className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-full transition-colors"
-          onClick={() => setShowMenu((v) => !v)}
+          onClick={() => setShowMenu(!showMenu)}
           aria-label="Perfil"
         >
           <FontAwesomeIcon icon={faUserCircle} className="text-2xl" />
@@ -39,6 +39,7 @@ export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
             <Link
               to='/account'
               className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left transition-colors duration-200"
+              onClick={() => setShowMenu(false)}
             >
               <FontAwesomeIcon icon={faUser} className="mr-2" />
               Account
@@ -49,13 +50,6 @@ export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
             >
               <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
               Logout
-            </button>
-            <button
-              onClick={handleDeleteUser}
-              className="flex items-center w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left transition-colors duration-200"
-            >
-              <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-              Delete Account
             </button>
           </div>
         )}
