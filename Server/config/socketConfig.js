@@ -57,20 +57,46 @@ const configureSocket = (server) => {
 
         await message.save();
 
-        const chat = await Chat.findById(chatId);
+        const chat = await Chat.findById(chatId)
+          .populate('participants', 'username phoneNumber email')
+          .populate({
+            path: 'messages',
+            options: { sort: { timestamp: -1 }, limit: 1 }
+          });
+
         chat.messages.push(message._id);
         await chat.save();
 
         io.to(chatId).emit("sendMessage", message);
 
-        chat.participants.forEach((participant) => {
-          const participantId = participant.toString();
+        chat.participants.forEach(async (participant) => {
+          const participantId = participant._id ? participant._id.toString() : participant.toString();
           if (participantId !== socket.user.id) {
             const activeChat = activeViewers.get(participantId);
-            if (activeChat !== chatId) {
-              io.to(participantId).emit("newMessageNotification", { chatId, message });
-            } else {
+
+            const wasDeleted = chat.deletedFor.includes(participantId);
+
+            if (wasDeleted) {
+              chat.deletedFor = chat.deletedFor.filter(id => id.toString() !== participantId);
+              await chat.save();
+              
+              const populatedChat = await Chat.findById(chat._id)
+                .populate('participants', 'username phoneNumber email')
+                .populate({
+                  path: 'messages',
+                  options: { sort: { timestamp: -1 }, limit: 1 }
+                });
+              
+              io.to(participantId).emit("chatRestored", {
+                chat: populatedChat,
+                message,
+                wasArchived: true
+              });
             }
+            else if (activeChat !== chatId) {
+              io.to(participantId).emit("newMessageNotification", { chatId, message });
+            }
+            io.to(participantId).emit("newChat", chat);
           }
         });
       } catch (err) {

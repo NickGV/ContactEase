@@ -3,6 +3,7 @@ import { getMessages, getOrCreateChat, sendMessage, getChats, deleteChat } from 
 import { io } from 'socket.io-client'
 import { toast } from 'sonner'
 import { getUserById } from '../services/authService'
+import useAuth from '../hooks/useAuth'
 
 export const ChatContext = createContext()
 
@@ -12,6 +13,7 @@ export const ChatProvider = ({ children }) => {
   const [socket, setSocket] = useState(null)
   const [chats, setChats] = useState([])
   const [isConnected, setIsConnected] = useState(false)
+  const { user } = useAuth()
 
   useEffect(() => {
     const newSocket = io('http://localhost:3000', {
@@ -90,11 +92,54 @@ export const ChatProvider = ({ children }) => {
       setMessages((prevMessages) => [...prevMessages, message])
     }
 
+    const handleNewChat = (chat) => {
+      console.log('New chat received:', chat)
+      setChats((prevChats) => {
+        if (prevChats.some((c) => c._id === chat._id)) return prevChats
+        return [chat, ...prevChats]
+      })
+    }
+
+    const handleChatRestored = (data) => {
+      if (!data || !data.chat) {
+        console.error('Received invalid chat data:', data)
+        return
+      }
+
+      const { chat, message, wasArchived } = data
+
+      if (!chat.participants) {
+        console.error('Chat missing participants:', chat)
+
+        const safeChat = {
+          ...chat,
+          participants: []
+        }
+
+        setChats((prevChats) => {
+          if (prevChats.some((c) => c._id === safeChat._id)) return prevChats
+          return [{ ...safeChat, hasNotification: true }, ...prevChats]
+        })
+
+        toast.info('Nuevo mensaje en chat archivado')
+        return
+      }
+
+      setChats((prevChats) => {
+        if (prevChats.some((c) => c._id === chat._id)) return prevChats
+        return [{ ...chat, hasNotification: true }, ...prevChats]
+      })
+
+      toast.info('Nuevo mensaje en chat archivado')
+    }
+
     socket.on('connect', onConnect)
     socket.on('disconnect', onDisconnect)
     socket.on('connect_error', onConnectError)
     socket.on('newMessageNotification', handleNewMessageNotification)
     socket.on('sendMessage', handleMessage)
+    socket.on('newChat', handleNewChat)
+    socket.on('chatRestored', handleChatRestored)
 
     return () => {
       socket.off('connect', onConnect)
@@ -102,13 +147,18 @@ export const ChatProvider = ({ children }) => {
       socket.off('connect_error', onConnectError)
       socket.off('newMessageNotification', handleNewMessageNotification)
       socket.off('sendMessage', handleMessage)
+      socket.off('newChat', handleNewChat)
+      socket.off('chatRestored', handleChatRestored)
     }
   }, [socket, chats, selectedChat])
 
   useEffect(() => {
     const fetchChats = async () => {
+      console.log('Fetching chats...')
       try {
         const response = await getChats()
+
+        console.log(response)
 
         const chatsWithNotifications = response.map((chat) => ({
           ...chat,
@@ -124,7 +174,7 @@ export const ChatProvider = ({ children }) => {
 
     if (!socket || !isConnected) return
     fetchChats()
-  }, [chats])
+  }, [socket, isConnected, user])
 
   useEffect(() => {
     if (!socket || !isConnected) return
@@ -192,7 +242,7 @@ export const ChatProvider = ({ children }) => {
           socket.emit('leftChat')
         }
 
-        toast.success('Chat deleted for you')
+        toast.success('Chat archivado. Si recibes un nuevo mensaje, volverá a aparecer.')
       }
       return response
     } catch (error) {

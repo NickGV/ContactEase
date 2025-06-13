@@ -1,57 +1,55 @@
 const Message = require("../models/Message");
 const Chat = require("../models/Chat");
 const User = require("../models/User");
+const mongoose = require("mongoose");
 
 exports.getOrCreateChat = async (req, res, next) => {
   const { phoneNumber } = req.body;
   const userId = req.user.id;
+
   try {
     const contact = await User.findOne({ phoneNumber });
+
     if (!contact) {
-      const error = new Error("Contact not found");
-      error.statusCode = 404;
-      return next(error);
+      return res.status(404).json({ message: "Contact not found" });
     }
+
+    const contactObjectId = contact._id;
 
     let chat = await Chat.findOne({
-      participants: { $all: [userId, contact._id] },
-      deletedFor: { $ne: userId }
+      participants: { $all: [userId, contactObjectId] },
+    })
+    .populate('participants', 'username phoneNumber email')
+    .populate({
+      path: 'messages',
+      options: { sort: { timestamp: -1 }, limit: 1 }
     });
 
-    if (chat) {
-      const messages = await Message.find({ chatId: chat._id }).sort({
-        timestamp: 1,
-      });
-      return res.json({ chat, messages });
+    if(chat){
+      if(chat.deletedFor.includes(userId)) {
+        chat.deletedFor = chat.deletedFor.filter(id => id.toString() !== userId);
+        await chat.save();
+      }
+      return res.json({ chat });
     }
+    
 
-    chat = await Chat.findOne({
-      participants: { $all: [userId, contact._id] },
-      deletedFor: userId
-    });
-
-    if (chat) {
-      chat.deletedFor = chat.deletedFor.filter(id => id.toString() !== userId);
+    if (!chat) {
+      chat = new Chat({
+        participants: [userId, contactObjectId],
+        messages: [],
+        deletedFor: []
+      });
       await chat.save();
-      const messages = await Message.find({ chatId: chat._id }).sort({
-        timestamp: 1,
-      });
-      return res.json({ chat, messages });
+      chat = await Chat.findById(chat._id)
+        .populate('participants', 'username phoneNumber email')
+        .populate({
+          path: 'messages',
+          options: { sort: { timestamp: -1 }, limit: 1 }
+        });
     }
 
-    chat = new Chat({
-      participants: [userId, contact._id],
-      deletedFor: []
-    });
-
-    await chat.save();
-
-    await User.updateMany(
-      { _id: { $in: [userId, contact._id] } },
-      { $push: { chats: chat._id } }
-    );
-
-    res.status(201).json({ chat });
+    res.json({ chat });
   } catch (error) {
     next(error);
   }
@@ -145,6 +143,16 @@ exports.deleteChat = async (req, res, next) => {
     chat.deletedFor.push(userId);
     await chat.save();
   }
+
+  const allDeleted = chat.participants.every(participant => 
+    chat.deletedFor.some(deletedId => deletedId.toString() === participant.toString())
+  )
+
+  if(allDeleted) {
+    await Message.deleteMany({ chatId: chat._id });
+    await Chat.findByIdAndDelete(chatId);
+    return res.json({message: "Chat deleted for all participants"});
+  }
   
   res.json({message: "Chat deleted for you"})
  } catch (error){
@@ -154,14 +162,26 @@ exports.deleteChat = async (req, res, next) => {
 
 exports.getChats = async (req, res, next) => {
   const userId = req.user.id;
+  console.log(userId)
   try {
     const chats = await Chat.find({ 
       participants: userId,
       deletedFor: { $ne: userId }
-    }).populate('participants', 'username phoneNumber email');
+    }).populate('participants', 'username phoneNumber email')
+      .populate({
+        path: 'messages',
+        options: { sort: { timestamp: -1 }, limit: 1 }
+      });
+
+    const chatsWithLastMessage = chats.map(chat => ({
+      ...chat.toObject(),
+      lastMessage: chat.messages[0] || null,
+      messages: undefined
+    }));
     
-    res.json(chats)
+    res.json(chatsWithLastMessage)
   }catch(error){
+    console.log(error)
     next(error)
   }
 }

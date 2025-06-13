@@ -54,7 +54,7 @@ export const ChatWindow = () => {
 
   const getContactName = async () => {
     if (selectedChat) {
-      const response = await getUserById(selectedChat?.participants[1])
+      const response = await getUserById(selectedChat?.participants[1]._id)
       if (response) {
         setContact(response)
       }
