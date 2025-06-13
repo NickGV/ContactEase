@@ -28,20 +28,12 @@ export const ContactPage = ({ toggleAddContactForm, showForm }) => {
       <div className="bg-white rounded-lg shadow-md overflow-hidden mt-4">
         <div className="flex flex-col md:flex-row h-[calc(100vh-12rem)]">
           <div
-            className={`${
-              selectedContact
-                ? 'md:w-1/3 lg:w-1/3 border-r border-gray-200'
-                : 'w-full'
-            } overflow-y-auto`}
+            className="border-r border-gray-200 w-full overflow-y-auto"
           >
             <ContactList toggleAddContactForm={toggleAddContactForm} />
           </div>
 
-          {selectedContact && (
-            <div className="w-full md:w-2/3 lg:w-2/3 p-4 overflow-y-auto">
-              {editingContact ? <EditContactForm /> : <ContactDetails />}
-            </div>
-          )}
+         
         </div>
       </div>
 

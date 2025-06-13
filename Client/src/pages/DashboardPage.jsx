@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react'
-import { ContactsContext } from '../context/ContactsContext'
+import { useState } from 'react'
 import useChat from '../hooks/useChat'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faPlus, faComments } from '@fortawesome/free-solid-svg-icons'
 import { AddContactForm } from '../components/contacts/AddContactForm'
 import { ContactChatSelector } from '../components/chat/ContactChatSelector'
+import useContacts from '../hooks/useContacts'
 
 export const DashboardPage = () => {
-  const { contacts } = useContext(ContactsContext)
+  const { contacts, handleSelectedContact } = useContacts()
   const { chats } = useChat()
   const [showAddContact, setShowAddContact] = useState(false)
   const [showChatSelector, setShowChatSelector] = useState(false)
@@ -47,7 +47,7 @@ export const DashboardPage = () => {
             <p className="text-gray-500">No hay contactos recientes</p>
           )}
           {recentContacts.map(contact => (
-            <div key={contact._id} className="bg-white border border-gray-200 rounded-xl shadow-sm flex flex-col items-center px-7 py-6 min-w-[180px] max-w-[220px]">
+            <div key={contact._id} className="bg-white border border-gray-200 rounded-xl shadow-sm flex flex-col items-center px-7 py-6 min-w-[180px] max-w-[220px] hover:cursor-pointer hover:scale-105 transition-transform" onClick={() =>handleSelectedContact(contact)}>
               <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-3 text-4xl text-blue-500">
                 <FontAwesomeIcon icon={faUser} />
               </div>
