@@ -17,11 +17,11 @@ app.set("io", io);
 
 const corsOptions = {
   origin: [
-    'http://localhost:5173', 'https://contactease-nickgv.netlify.app/'
-
+    'http://localhost:5173', 'https://contactease-nickgv.netlify.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 };
 
 app.use(cors(corsOptions));
