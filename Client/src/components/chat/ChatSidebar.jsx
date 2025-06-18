@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ContactsContext } from '../../context/ContactsContext'
-import { faArrowLeft, faUser, faUserPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faUser, faUserPlus, faXmark, faArchive } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useState } from 'react'
 import { SearchBar } from '../ui/SearchBar'
 import useChat from '../../hooks/useChat'
 import { InvitePopup } from '../layout/InvitePopup'
 import { ContactChatSelector } from './ContactChatSelector'
+import { toast } from 'sonner'
 
 export const ChatSidebar = () => {
   const {
@@ -55,7 +56,7 @@ export const ChatSidebar = () => {
     }
   }
 
-  const handleDeleteChat = async (e, contact) => {
+  const handleArchiveChat = async (e, contact) => {
     e.stopPropagation()
     const chat = chats.find(chat =>
       chat.participants.some(p => p.phoneNumber === contact.phoneNumber))
@@ -100,11 +101,14 @@ export const ChatSidebar = () => {
           )
         : filteredChats && filteredChats.length > 0
           ? (
-        <div className="flex flex-col w-full mt-8">
+        <div className="flex flex-col w-full mt-8 ">
           <h2 className="hidden sm:block mb-2 sm:mb-3 text-base sm:text-lg md:text-xl text-white-headline font-bold p-1 sm:p-2">
             Contact List
           </h2>
-          <ul className="w-full flex flex-col gap-1">
+          <ul className="w-full flex flex-col gap-1 relative">
+            {chats.some((chat) => chat.hasNotification) && (
+              <span className="absolute top-3 left-4 w-2 h-2 bg-red-500 rounded-full"></span>
+            )}
             {filteredChats.map((contact) => {
               const chat = chats.find(chat =>
                 chat.participants.some(p => p.phoneNumber === contact.phoneNumber)
@@ -130,10 +134,11 @@ export const ChatSidebar = () => {
                     <p className="text-gray-500 text-sm truncate">{lastMessage}</p>
                   </div>
                   <button
-                    className="text-gray-400 hover:text-red-500 transition"
-                    onClick={(e) => handleDeleteChat(e, contact)}
+                    className="text-gray-400 hover:text-orange-500 transition"
+                    onClick={(e) => handleArchiveChat(e, contact)}
+                    title="Archivar chat"
                   >
-                    <FontAwesomeIcon icon={faXmark} />
+                    <FontAwesomeIcon icon={faArchive} />
                   </button>
                 </li>
               )

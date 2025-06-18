@@ -72,6 +72,7 @@ export const ContactsProvider = ({ children }) => {
   }
 
   const handleSelectedContact = (contact) => {
+    console.log('Selected contact:', contact)
     setEditingContact(null)
     if (selectedContact?._id === contact._id) {
       setSelectedContact(null)

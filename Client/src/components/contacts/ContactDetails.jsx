@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faStar as solidStar,
@@ -16,6 +17,7 @@ import { InvitePopup } from '../layout/InvitePopup'
 
 export const ContactDetails = () => {
   const [inviteContact, setInviteContact] = useState(null)
+  const navigate = useNavigate()
 
   const {
     addToFavorites,
@@ -30,6 +32,8 @@ export const ContactDetails = () => {
   const handleStartChat = async (contact) => {
     try {
       await createOrGetChat(contact.phoneNumber)
+      navigate('/chat')
+      resetSelectedContact()
       setInviteContact(null)
     } catch (error) {
       if (error === 'Contact not found') {

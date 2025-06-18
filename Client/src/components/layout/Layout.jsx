@@ -1,6 +1,7 @@
 import { Header } from './Header'
 import { Outlet } from 'react-router-dom'
 import { useState } from 'react'
+import { ModalManager } from './ModalManager'
 
 export const Layout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -11,6 +12,7 @@ export const Layout = () => {
       <main className="flex-1 md:ml-[280px] p-4 overflow-auto pt-20">
         <Outlet />
       </main>
+       <ModalManager />
     </div>
   )
 }
