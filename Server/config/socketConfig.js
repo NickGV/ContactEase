@@ -6,7 +6,10 @@ const Chat = require("../models/Chat");
 const configureSocket = (server) => {
   const io = socketIo(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: [
+        "http://localhost:5173",
+        "https://contactease-nickgv.netlify.app"
+      ],
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,

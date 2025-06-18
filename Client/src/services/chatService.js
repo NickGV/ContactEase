@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/api/chat'
+const API_URL = `${import.meta.env.VITE_API_URL}/chat`
 
 const getChatHeaders = () => {
   const token = localStorage.getItem('token')

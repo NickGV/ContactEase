@@ -16,8 +16,9 @@ export const ChatProvider = ({ children }) => {
   const { user } = useAuth()
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3000', {
+    const newSocket = io(import.meta.env.VITE_API_URL, {
       query: { token: localStorage.getItem('token') },
+      transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000
