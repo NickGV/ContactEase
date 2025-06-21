@@ -35,6 +35,12 @@ const configureSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
+    console.log('New socket connection:', socket.id);
+    console.log('User connected:', socket.user.id);
+    
+    socket.on('error', (error) => {
+      console.error('Socket error:', error);
+    });
     
     socket.join(socket.user.id);
 
