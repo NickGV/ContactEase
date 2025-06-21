@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faUserCircle, faSignOutAlt, faTrashAlt, faUser } from '@fortawesome/free-solid-svg-icons'
-import { useContext, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import { faBars, faUserCircle, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 import { NavBar } from './NavBar'
 import { Link } from 'react-router-dom'
+import useAuth from '../../hooks/useAuth'
+import { useState } from 'react'
 
 export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
-  const { user, handleLogout, handleDeleteUser } = useContext(AuthContext)
+  const { user, handleLogout } = useAuth()
   const [showMenu, setShowMenu] = useState(false)
 
   const logoutAndRedirect = async () => {
@@ -20,7 +20,7 @@ export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
       <button
         className="md:hidden text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition-colors"
         onClick={onMenuClick}
-        aria-label="Abrir menú"
+        aria-label="Open menu"
       >
         <FontAwesomeIcon icon={faBars} className="text-xl" />
       </button>
@@ -29,7 +29,7 @@ export const Header = ({ onMenuClick, mobileMenuOpen, setMobileMenuOpen }) => {
         <button
           className="flex items-center gap-2 text-gray-700 hover:bg-gray-100 p-2 rounded-full transition-colors"
           onClick={() => setShowMenu(!showMenu)}
-          aria-label="Perfil"
+          aria-label="Profile"
         >
           <FontAwesomeIcon icon={faUserCircle} className="text-2xl" />
           <span className="hidden md:inline font-medium">{user?.username}</span>

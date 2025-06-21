@@ -31,7 +31,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           }`}
           onClick={() => setFilter('all')}
         >
-          Todos
+          All Contacts
         </button>
         <button
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -41,7 +41,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           }`}
           onClick={() => setFilter('favorites')}
         >
-          Favoritos
+          Favorites
         </button>
         <button
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -51,7 +51,7 @@ export const ContactList = ({ toggleAddContactForm }) => {
           }`}
           onClick={() => setFilter('recent')}
         >
-          Recientes
+          Recent Contacts
         </button>
       </div>
       {!searchResultsFound

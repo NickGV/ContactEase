@@ -16,7 +16,7 @@ export const getContacts = async () => {
     const response = await axios.get(API_URL, getAuthHeaders())
     return response.data
   } catch (error) {
-    throw error.response?.data?.message || 'An error occurred while featching contacts'
+    throw error.response?.data?.message || 'An error occurred while fetching contacts'
   }
 }
 
@@ -57,6 +57,6 @@ export const getContactById = async (id) => {
     return response.data
   } catch (error) {
     console.log(error)
-    throw error.response?.data?.message || 'An error occurred while featching contact'
+    throw error.response?.data?.message || 'An error occurred while fetching contact'
   }
 }

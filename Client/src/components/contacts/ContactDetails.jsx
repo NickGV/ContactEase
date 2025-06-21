@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -12,8 +12,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons'
 import useContacts from '../../hooks/useContacts'
-import { ChatContext } from '../../context/ChatContext'
 import { InvitePopup } from '../layout/InvitePopup'
+import useChat from '../../hooks/useChat'
 
 export const ContactDetails = () => {
   const [inviteContact, setInviteContact] = useState(null)
@@ -27,7 +27,7 @@ export const ContactDetails = () => {
     deleteContactById
   } = useContacts()
 
-  const { createOrGetChat } = useContext(ChatContext)
+  const { createOrGetChat } = useChat()
 
   const handleStartChat = async (contact) => {
     try {
@@ -66,7 +66,7 @@ export const ContactDetails = () => {
               <div className="flex items-center p-3 bg-gray-50 rounded-lg">
                 <FontAwesomeIcon icon={faPhone} className="text-primary mr-3" />
                 <div>
-                  <p className="text-xs text-gray-500">Teléfono</p>
+                  <p className="text-xs text-gray-500">Phone</p>
                   <p className="font-medium">{selectedContact.phoneNumber}</p>
                 </div>
               </div>
@@ -89,11 +89,11 @@ export const ContactDetails = () => {
             </div>
 
             <div className="flex-grow border-b border-gray-200">
-              <h3 className="font-medium text-gray-700 mb-2">Notas</h3>
+              <h3 className="font-medium text-gray-700 mb-2">Notes</h3>
               <div className="bg-gray-50 rounded-lg p-4 h-48 overflow-y-auto">
                 {selectedContact.notes || (
                   <span className="text-gray-400">
-                    No hay notas para este contacto
+                    No notes for this contact
                   </span>
                 )}
               </div>
@@ -105,7 +105,7 @@ export const ContactDetails = () => {
                 onClick={() => handleStartChat(selectedContact)}
               >
                 <FontAwesomeIcon icon={faComments} />
-                Iniciar Chat
+                Start Chat
               </button>
               <div className="flex gap-3 justify-between border-t border-gray-200 pt-4">
                 <button
@@ -113,7 +113,7 @@ export const ContactDetails = () => {
                   className="flex gap-2 justify-center items-center mr-2 p-2 text-gray-500 hover:text-primary border w-full hover:bg-gray-100 rounded-lg relative"
                 >
                   <FontAwesomeIcon icon={faPenToSquare} />
-                  <span>Editar</span>
+                  <span>Edit</span>
                 </button>
 
                 <button
@@ -129,8 +129,8 @@ export const ContactDetails = () => {
                   />
                   <span className="hidden md:inline">
                   {selectedContact.isFavorite
-                    ? 'Quitar de favoritos'
-                    : 'Añadir a favoritos'}
+                    ? 'Remove from favorites'
+                    : 'Add to favorites'}
                   </span>
                 </button>
 
@@ -139,7 +139,7 @@ export const ContactDetails = () => {
                   className="flex gap-2 justify-center items-center mr-2 p-2 bg-red-50 text-danger hover:bg-red-100 rounded-lg w-full"
                 >
                   <FontAwesomeIcon icon={faTrash} />
-                  <span>Eliminar</span>
+                  <span>Delete</span>
                 </button>
               </div>
             </div>

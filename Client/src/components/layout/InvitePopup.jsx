@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 export const InvitePopup = ({ contact, onClose }) => {
   const [copied, setCopied] = useState(false)
@@ -30,4 +31,9 @@ export const InvitePopup = ({ contact, onClose }) => {
       </div>
     </div>
   )
+}
+
+InvitePopup.propTypes = {
+  contact: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired
 }

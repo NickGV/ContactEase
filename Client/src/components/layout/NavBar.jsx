@@ -1,10 +1,8 @@
-import { NavLink, useNavigate } from 'react-router-dom'
-import { useContext, useState, useEffect } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import { NavLink } from 'react-router-dom'
+import { useEffect } from 'react'
 import useChat from '../../hooks/useChat'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-
   faHome,
   faAddressBook,
   faComments,

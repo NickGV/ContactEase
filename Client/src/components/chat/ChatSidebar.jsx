@@ -1,17 +1,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ContactsContext } from '../../context/ContactsContext'
-import { faArrowLeft, faUser, faUserPlus, faXmark, faArchive } from '@fortawesome/free-solid-svg-icons'
-import { useContext, useState } from 'react'
+import { faArrowLeft, faUser, faUserPlus, faArchive } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react'
 import { SearchBar } from '../ui/SearchBar'
 import useChat from '../../hooks/useChat'
 import { InvitePopup } from '../layout/InvitePopup'
 import { ContactChatSelector } from './ContactChatSelector'
-import { toast } from 'sonner'
+import useContacts from '../../hooks/useContacts'
 
 export const ChatSidebar = () => {
   const {
     contacts, searchTerm, setSearchTerm, searchResultsFound
-  } = useContext(ContactsContext)
+  } = useContacts()
   const { createOrGetChat, selectedChat, chats, deleteChatById, setChats, setSelectedChat } = useChat()
   const [showInvitePopup, setShowInvitePopup] = useState(false)
   const [inviteContact, setInviteContact] = useState(null)
@@ -113,7 +112,7 @@ export const ChatSidebar = () => {
               const chat = chats.find(chat =>
                 chat.participants.some(p => p.phoneNumber === contact.phoneNumber)
               )
-              const lastMessage = chat?.messages?.[chat.messages.length - 1]?.content || 'No hay mensajes aún'
+              const lastMessage = chat?.messages?.[chat.messages.length - 1]?.content || 'No messages yet'
 
               return (
                 <li
@@ -136,7 +135,7 @@ export const ChatSidebar = () => {
                   <button
                     className="text-gray-400 hover:text-orange-500 transition"
                     onClick={(e) => handleArchiveChat(e, contact)}
-                    title="Archivar chat"
+                    title="Archive Chat"
                   >
                     <FontAwesomeIcon icon={faArchive} />
                   </button>

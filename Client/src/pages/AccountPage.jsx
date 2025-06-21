@@ -1,12 +1,12 @@
-import { useContext, use, useEffect, useState } from 'react'
-import { AuthContext } from '../context/AuthContext'
+import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faEye, faFloppyDisk, faLock, faLockOpen, faPhone, faSignOutAlt, faTrash, faUser } from '@fortawesome/free-solid-svg-icons'
 import { Input } from '../components/ui/Input'
 import useFormValidation from '../hooks/useForm'
+import useAuth from '../hooks/useAuth'
 
 export const AccountPage = () => {
-  const { user, handleLogout, handleDeleteUser, handleUpdateUser } = useContext(AuthContext)
+  const { user, handleLogout, handleDeleteUser, handleUpdateUser } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
 
   const INITIAL_STATE = {

@@ -23,17 +23,17 @@ export const EditContactForm = () => {
     const errors = {}
 
     if (!values.name) {
-      errors.name = 'El nombre es requerido'
+      errors.name = 'Name is required'
     }
 
     if (!values.email) {
-      errors.email = 'El email es requerido'
+      errors.email = 'Email is required'
     } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = 'El email no es válido'
+      errors.email = 'Email is not valid'
     }
 
     if (!values.phoneNumber) {
-      errors.phoneNumber = 'El número de teléfono es requerido'
+      errors.phoneNumber = 'Phone number is required'
     }
 
     return errors
@@ -89,7 +89,7 @@ export const EditContactForm = () => {
                   className={`text-xl font-bold text-center w-full bg-transparent border-b ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
                   } focus:border-primary-light focus:outline-none px-2 py-1`}
-                  placeholder="Nombre"
+                  placeholder="Name.."
                 />
                 {errors.name && (
                   <p className="absolute text-xs text-red-500 text-center w-full mt-1">{errors.name}</p>
@@ -102,7 +102,7 @@ export const EditContactForm = () => {
             <div className="flex items-start p-3 bg-gray-50 rounded-lg">
               <FontAwesomeIcon icon={faPhone} className="text-primary mr-3 mt-5" />
               <div className="w-full">
-                <p className="text-xs text-gray-500">Teléfono</p>
+                <p className="text-xs text-gray-500">Phone</p>
                 <input
                   type="tel"
                   name="phoneNumber"
@@ -111,7 +111,7 @@ export const EditContactForm = () => {
                   className={`font-medium w-full bg-transparent border-b ${
                     errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
                   } focus:border-primary-light focus:outline-none px-0 py-1`}
-                  placeholder="Número de teléfono"
+                  placeholder="Phone number"
                 />
                 {errors.phoneNumber && (
                   <p className="text-xs text-red-500 mt-1">{errors.phoneNumber}</p>
@@ -134,7 +134,7 @@ export const EditContactForm = () => {
                   className={`font-medium text-primary w-full bg-transparent border-b ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   } focus:border-primary-light focus:outline-none px-0 py-1`}
-                  placeholder="Correo electrónico"
+                  placeholder="Email address"
                 />
                 {errors.email && (
                   <p className="text-xs text-red-500 mt-1">{errors.email}</p>
@@ -144,14 +144,14 @@ export const EditContactForm = () => {
           </div>
 
           <div className="flex-grow border-b border-gray-200 mb-4">
-            <h3 className="font-medium text-gray-700 mb-2">Notas</h3>
+            <h3 className="font-medium text-gray-700 mb-2">Notes</h3>
             <div className="bg-gray-50 rounded-lg p-4 h-48">
               <textarea
                 name="notes"
                 value={formData.notes}
                 onChange={handleChange}
                 className="w-full h-full bg-transparent resize-none focus:outline-none"
-                placeholder="No hay notas para este contacto"
+                placeholder="No notes for this contact"
               ></textarea>
             </div>
           </div>
@@ -162,7 +162,7 @@ export const EditContactForm = () => {
               className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg shadow hover:bg-primary-light transition font-medium text-base justify-center"
             >
               <FontAwesomeIcon icon={faSave} />
-              Guardar Cambios
+              Save Changes
             </button>
           </div>
         </form>

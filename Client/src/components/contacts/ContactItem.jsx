@@ -51,7 +51,7 @@ export const ContactItem = ({
     handleEditContact(contact)
   }
 
-  const handleclick = (e) => {
+  const handleClick = (e) => {
     e.stopPropagation()
     const contact = {
       _id,
@@ -69,7 +69,7 @@ export const ContactItem = ({
       className={`relative flex gap-3 md:justify-between p-4 hover:cursor-pointer w-full rounded-lg shadow-md hover:shadow-lg hover:shadow-black hover:border-none transition-all ${
         selectedContact?._id === _id ? 'md:bg-slate-700' : ''
       }`}
-      onClick={handleclick}
+      onClick={handleClick}
     >
       <div className="flex flex-row gap-3 items-center w-full">
         <div className="flex justify-center items-center text-3xl md:text-5xl text-white-btn-text bg-black-bg  border rounded-full h-16 w-16 md:h-16 md:w-16 p-4">
@@ -107,7 +107,7 @@ export const ContactItem = ({
         </button>
         <button
           className="hidden text-2xl md:flex items-center relative hover:scale-150 text-primary transition-all"
-          title="Editar (Editar contacto)"
+          title="Edit (Edit contact)"
           onClick={editingContact}
           onMouseEnter={() => setHoveredButton('edit')}
           onMouseLeave={() => setHoveredButton(null)}
@@ -121,7 +121,7 @@ export const ContactItem = ({
         </button>
         <button
           className="text-2xl md:flex items-center relative hover:scale-150 transition-all text-red-500"
-          title="Eliminar (Eliminar contacto)"
+          title="Delete (Delete contact)"
           onMouseEnter={() => setHoveredButton('delete')}
           onMouseLeave={() => setHoveredButton(null)}
           onClick={handleDeleteContact}

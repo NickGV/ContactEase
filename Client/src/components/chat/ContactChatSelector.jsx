@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 export const ContactChatSelector = ({ contacts, onSelectContact, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -58,4 +59,10 @@ export const ContactChatSelector = ({ contacts, onSelectContact, onClose }) => {
       </div>
     </div>
   )
+}
+
+ContactChatSelector.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  onSelectContact: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 }

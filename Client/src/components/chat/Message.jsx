@@ -6,7 +6,6 @@ import useAuth from '../../hooks/useAuth'
 import PropTypes from 'prop-types'
 
 export const Message = ({ message }) => {
-  const [senderName, setSenderName] = useState('')
   const { user } = useAuth()
   const isCurrentUser = message.senderId === user._id
   const isOwn = message.senderId === user._id

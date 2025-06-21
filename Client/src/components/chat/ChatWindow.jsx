@@ -88,8 +88,8 @@ export const ChatWindow = () => {
         {messages.length === 0
           ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-400">
-            <p>No hay mensajes aún</p>
-            <p className="text-sm">Envía un mensaje para iniciar la conversación</p>
+            <p>No messages yet</p>
+            <p className="text-sm">Send a message to start the conversation</p>
           </div>
             )
           : (
@@ -108,7 +108,7 @@ export const ChatWindow = () => {
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-400"
-            placeholder="Escribe un mensaje..."
+            placeholder="Type a message..."
           />
           <button
             onClick={handleSendMessage}

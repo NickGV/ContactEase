@@ -1,10 +1,9 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useContext } from 'react'
-import { ContactsContext } from '../../context/ContactsContext'
+import useContacts from '../../hooks/useContacts'
 
 export const SearchBar = () => {
-  const { searchTerm, setSearchTerm } = useContext(ContactsContext)
+  const { searchTerm, setSearchTerm } = useContacts()
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value)
@@ -14,7 +13,7 @@ export const SearchBar = () => {
       <div className="flex w-full bg-transparent rounded-md border border-stroke dark:border-dark-3 px-4 text-dark-6 outline-none transition focus:border-white ring-white ring-1 focus:ring-orange-400">
         <input
           type="text"
-          placeholder="Buscar contactos"
+          placeholder="Search contacts..."
           onChange={handleSearchChange}
           value={searchTerm}
           className="w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 focus:outline-none"
