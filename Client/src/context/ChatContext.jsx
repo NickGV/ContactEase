@@ -21,7 +21,8 @@ export const ChatProvider = ({ children }) => {
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 10,
-      reconnectionDelay: 1000
+      reconnectionDelay: 1000,
+      timeout: 1000
     })
     setSocket(newSocket)
 

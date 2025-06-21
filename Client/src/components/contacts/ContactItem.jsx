@@ -142,7 +142,7 @@ ContactItem.propTypes = {
   _id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   email: PropTypes.string,
-  phoneNumber: PropTypes.string.isRequired,
+  phoneNumber: PropTypes.number.isRequired,
   notes: PropTypes.string,
   isFavorite: PropTypes.bool
 }
