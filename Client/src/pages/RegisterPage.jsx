@@ -42,7 +42,7 @@ export const RegisterPage = () => {
     try {
       const response = await handleRegister(formData.username, formData.email, formData.phoneNumber, formData.password)
       if (response.token) {
-        navigate('/contacts')
+        navigate('/')
       }
     } catch (error) {
       console.error(error)

@@ -27,7 +27,7 @@ export const LoginPage = () => {
     try {
       const response = await handleLogin(values.email, values.password)
       if (response.token) {
-        navigate('/contacts')
+        navigate('/')
       }
     } catch (error) {
       console.error(error)
