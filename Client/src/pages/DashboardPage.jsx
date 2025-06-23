@@ -61,10 +61,10 @@ export const DashboardPage = () => {
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">Chats Recientes</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-3">Recent chats</h2>
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
           {recentChats.length === 0 && (
-            <p className="text-gray-500 p-6">No hay chats recientes</p>
+            <p className="text-gray-500 p-6">No recent chats</p>
           )}
           <ul>
             {recentChats.map(chat => {

@@ -4,6 +4,25 @@ ContactEase is a web application for managing your contacts easily with advanced
 
 ## Visit the page here: [Page](https://contactease-nickgv.netlify.app/)
 
+## Preview
+
+<div align="center">
+  <video width="640" height="360" controls>
+    <source src="files/ContactEase-Preview.mp4" type="video/mp4">
+    Your browser doesn't support the video element
+  </video>
+</div>
+
+## Screenshots
+
+<div align="center">
+  <img src="files/Screenshot1.png" alt="Dashboard" width="400"/>
+  <p><em>Dashboard</em></p>
+  
+  <img src="files/Screenshot2.png" alt="Chat Interface" width="400"/>
+  <p><em>real time chat</em></p>
+</div>
+
 ## Key Features
 
 - **Contact Management**
